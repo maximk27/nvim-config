@@ -35,6 +35,11 @@ require("lazy").setup({
 		-- { "folke/tokyonight.nvim" },
 		{ "rose-pine/neovim", name = "rose-pine" },
 
+		-- project based marks
+		{
+			"BartSte/nvim-project-marks",
+		},
+
 		{ "junegunn/vim-easy-align" },
 
 		{ "stevearc/oil.nvim" },
@@ -56,6 +61,8 @@ require("lazy").setup({
 			build = "cd app && yarn install",
 			init = function()
 				vim.g.mkdp_filetypes = { "markdown" }
+				vim.g.mkdp_auto_close = 0
+				vim.g.mkdp_refresh_slow = 1
 			end,
 			ft = { "markdown" },
 		},
@@ -103,7 +110,7 @@ require("lazy").setup({
 			"ray-x/lsp_signature.nvim",
 			event = "InsertEnter",
 		},
-		{ "luckasRanarison/tailwind-tools.nvim", lazy = true },
+		-- { "luckasRanarison/tailwind-tools.nvim", lazy = true },
 		{ "brenoprata10/nvim-highlight-colors", lazy = true },
 
 		-- formatter
@@ -449,7 +456,6 @@ vim.diagnostic.config({
 	float = { border = "rounded" },
 })
 
-require("tailwind-tools").setup({})
 -----------------------------------------------suggestion setup--------------------------------------------------
 local ls = require("luasnip")
 
@@ -502,7 +508,6 @@ require("lsp_signature").setup({
 })
 
 ----------------------------------------------mason setup--------------------------------------------------
-local lspconfig = require("lspconfig")
 local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
 require("mason").setup({})
@@ -751,7 +756,7 @@ require("oil").setup({
 	},
 })
 
-vim.keymap.set("n", "-", ":Oil<CR>")
+vim.keymap.set("n", "-", ":Oil<CR>", { silent = true })
 
 -------------------------------------------cpp setup--------------------------------------------
 local args = {
@@ -874,6 +879,15 @@ vim.api.nvim_create_autocmd("User", {
 		vim.notify("Conflict detected in " .. vim.fn.expand("<afile>"))
 	end,
 })
+
+-------------------------------------------mark setup--------------------------------------------
+require("projectmarks").setup({
+	shadafile = "nvim.shada",
+	mappings = true,
+	abbreviations = false,
+	message = "",
+})
+
 -------------------------------------------theme setup--------------------------------------------
 
 require("everforest").setup({
