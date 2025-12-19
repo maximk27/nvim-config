@@ -387,7 +387,7 @@ require("ibl").setup({
 	-- },
 })
 
-----------------------------------------------lsp setup--------------------------------------------------
+----------------------------------------------tree setup--------------------------------------------------
 
 local tsj = require("treesj")
 tsj.setup({
@@ -396,6 +396,80 @@ tsj.setup({
 vim.keymap.set("n", "<C-j>", ":lua require('treesj').toggle()<CR>", { silent = true })
 
 ----------------------------------------------lsp setup--------------------------------------------------
+
+local capabilities = require("cmp_nvim_lsp").default_capabilities()
+
+require("mason").setup({})
+-- require("mason-lspconfig").setup({
+-- 	automatic_enable = true,
+-- })
+
+vim.lsp.config("*", {
+	capabilities = capabilities,
+	root_markers = { ".git" },
+})
+
+vim.lsp.config("pyright", {
+	settings = {
+		["python"] = {
+			analysis = {
+				typeCheckingMode = "off",
+				autoSearchPaths = true,
+				useLibraryCodeForTypes = true,
+				diagnosticMode = "openFilesOnly",
+				extraPaths = { "." }, -- optional but reinforces absolute path support
+			},
+		},
+	},
+})
+
+vim.lsp.config("lua_ls", {
+	settings = {
+		Lua = {
+			diagnostics = {
+				globals = { "vim" },
+			},
+			workspace = {
+				library = vim.api.nvim_get_runtime_file("", true), -- make it aware of Neovim's runtime
+				checkThirdParty = false,
+			},
+		},
+	},
+})
+
+vim.lsp.config("rust-analyzer", {
+	cmd = { "rust-analyzer" },
+	filetypes = { "rust" },
+	root_markers = { "Cargo.toml" },
+	settings = {
+		["rust-analyzer"] = {
+			imports = {
+				granularity = {
+					group = "module",
+				},
+				prefix = "self",
+			},
+			cargo = {
+				buildScripts = {
+					enable = true,
+				},
+			},
+			procMacro = {
+				enable = true,
+			},
+		},
+	},
+})
+
+local ls_to_setup = { "pyright", "clangd", "lua_ls", "html", "ts_ls", "cmake", "rust-analyzer" }
+for _, server in ipairs(ls_to_setup) do
+	vim.lsp.enable(server)
+end
+
+----------------------------------------------lsp setup--------------------------------------------------
+
+vim.lsp.set_log_level("WARN")
+
 function hoverLook()
 	vim.lsp.buf.hover({
 		border = { "╭", "─", "╮", "│", "╯", "─", "╰", "│" },
@@ -465,6 +539,7 @@ require("nvim-highlight-colors").setup({})
 
 local cmp = require("cmp")
 cmp.setup({
+	preselect = cmp.PreselectMode.None,
 	formatting = {
 		format = require("nvim-highlight-colors").format,
 	},
@@ -507,52 +582,6 @@ require("lsp_signature").setup({
 	hint_enable = false,
 })
 
-----------------------------------------------mason setup--------------------------------------------------
-local capabilities = require("cmp_nvim_lsp").default_capabilities()
-
-require("mason").setup({})
--- require("mason-lspconfig").setup({
--- 	automatic_enable = true,
--- })
-
-vim.lsp.config("*", {
-	capabilities = capabilities,
-	root_markers = { ".git" },
-})
-
-vim.lsp.config("pyright", {
-	settings = {
-		["python"] = {
-			analysis = {
-				typeCheckingMode = "off",
-				autoSearchPaths = true,
-				useLibraryCodeForTypes = true,
-				diagnosticMode = "openFilesOnly",
-				extraPaths = { "." }, -- optional but reinforces absolute path support
-			},
-		},
-	},
-})
-
-vim.lsp.config("lua_ls", {
-	settings = {
-		Lua = {
-			diagnostics = {
-				globals = { "vim" },
-			},
-			workspace = {
-				library = vim.api.nvim_get_runtime_file("", true), -- make it aware of Neovim's runtime
-				checkThirdParty = false,
-			},
-		},
-	},
-})
-
-local ls_to_setup = { "pyright", "clangd", "lua_ls", "html", "ts_ls", "cmake" }
-for _, server in ipairs(ls_to_setup) do
-	vim.lsp.enable(server)
-end
-
 -------------------------------------------tree-sitter setup--------------------------------------------
 require("nvim-treesitter.configs").setup({
 	ensure_installed = { "c", "cpp", "lua", "vim", "vimdoc", "query", "markdown", "markdown_inline", "java" },
@@ -584,6 +613,7 @@ conform.setup({
 		python = { "ruff_format" },
 		javascript = { "prettierd", "prettier" },
 		html = { "prettierd", "prettier" },
+		rust = { "rustfmt" },
 		-- ["_"] = { "trim_whitespace" },
 	},
 	default_format_opts = {
@@ -750,9 +780,12 @@ end)
 require("oil").setup({
 	view_options = {
 		show_hidden = true,
+		show_parent_dir = false,
 	},
 	keymaps = {
 		["<C-c>"] = { "", mode = "n" },
+		["_"] = { "e!", mode = "c" },
+		["f"] = "actions.select",
 	},
 })
 
