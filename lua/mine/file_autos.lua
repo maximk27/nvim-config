@@ -45,6 +45,7 @@ local launch_json_template = [[
 
 local language_templates = {
 	{ "*.h", header_template },
+	{ "*.hpp", header_template },
 	{ "*launch.json", launch_json_template },
 }
 

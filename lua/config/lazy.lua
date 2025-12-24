@@ -35,6 +35,8 @@ require("lazy").setup({
 		-- { "folke/tokyonight.nvim" },
 		{ "rose-pine/neovim", name = "rose-pine" },
 
+		{ "sindrets/diffview.nvim" },
+
 		-- project based marks
 		{
 			"BartSte/nvim-project-marks",
@@ -172,15 +174,6 @@ require("lazy").setup({
 		-- surround editing
 		{ "kylechui/nvim-surround" },
 
-		-- persistence
-		{
-			"folke/persistence.nvim",
-			event = "BufReadPre", -- this will only start session saving when an actual file was opened
-			opts = {
-				-- add any custom options here
-			},
-		},
-
 		-- status line
 		{ "nvim-lualine/lualine.nvim" },
 
@@ -223,7 +216,7 @@ require("lazy").setup({
 
 		-- git
 		{ "lewis6991/gitsigns.nvim", lazy = true },
-		{ "akinsho/git-conflict.nvim", version = "*", config = true },
+		-- { "akinsho/git-conflict.nvim", version = "*", config = true },
 		{ "tpope/vim-fugitive" },
 	},
 	install = { colorscheme = { "habamax" } },
@@ -461,7 +454,7 @@ vim.lsp.config("rust-analyzer", {
 	},
 })
 
-local ls_to_setup = { "pyright", "clangd", "lua_ls", "html", "ts_ls", "cmake", "rust-analyzer" }
+local ls_to_setup = { "pyright", "clangd", "lua_ls", "html", "ts_ls", "cmake", "rust-analyzer", "taplo" }
 for _, server in ipairs(ls_to_setup) do
 	vim.lsp.enable(server)
 end
@@ -770,11 +763,6 @@ require("nvim-surround").setup({
 		change_line = "cS",
 	},
 })
--------------------------------------------persistence setup--------------------------------------------
--- load the session for the current directory
-vim.keymap.set("n", ";a", function()
-	require("persistence").load()
-end)
 
 -------------------------------------------file manager setup--------------------------------------------
 require("oil").setup({
@@ -880,37 +868,55 @@ vim.api.nvim_create_autocmd("BufEnter", {
 })
 
 -------------------------------------------git setup--------------------------------------------
-vim.keymap.set("n", "+", ":Gread<CR>")
-vim.keymap.set("n", ";z", ":Git<CR>", { noremap = true, silent = true })
-vim.keymap.set("n", ";y", ":Gvdiffsplit<CR>")
-
 require("gitsigns").setup({
 	current_line_blame = true,
 })
-require("git-conflict").setup({
-	default_mappings = true, -- disable buffer local mapping created by this plugin
-	default_commands = true, -- disable commands created by this plugin
-	disable_diagnostics = false, -- This will disable the diagnostics in a buffer whilst it is conflicted
-	list_opener = "copen", -- command or function to open the conflicts list
-	highlights = { -- They must have background color, otherwise the default color will be used
-		incoming = "DiffAdd",
-		current = "DiffText",
-	},
-	default_mappings = {
-		ours = "1",
-		theirs = "2",
-		both = "3",
-		none = "4",
-		next = "<C-p>",
-		prev = "<C-n>",
-	},
-})
 
-vim.api.nvim_create_autocmd("User", {
-	pattern = "GitConflictDetected",
-	callback = function()
-		vim.notify("Conflict detected in " .. vim.fn.expand("<afile>"))
-	end,
+local actions = require("diffview.actions")
+require("diffview").setup({
+	view = {
+		default = {
+			layout = "diff2_horizontal",
+		},
+		merge_tool = {
+			layout = "diff3_mixed",
+		},
+	},
+	file_panel = {
+		listing_style = "list", -- One of 'list' or 'tree'
+		win_config = { -- See |diffview-config-win_config|
+			position = "left",
+			width = 20,
+			win_opts = {},
+		},
+	},
+	keymaps = {
+		view = {
+			{
+				"n",
+				";1",
+				actions.conflict_choose("ours"),
+			},
+			{
+				"n",
+				";2",
+				actions.conflict_choose("theirs"),
+			},
+			{
+				"n",
+				";3",
+				actions.conflict_choose("all"),
+			},
+			{ "n", ";4", actions.conflict_choose("none") },
+		},
+		file_history_panel = {
+			{
+				"n",
+				"f",
+				actions.select_entry,
+			},
+		},
+	},
 })
 
 -------------------------------------------mark setup--------------------------------------------

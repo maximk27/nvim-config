@@ -46,14 +46,6 @@ vim.keymap.set("v", "P", '"_dP', { noremap = true, silent = true })
 vim.keymap.set("v", "C", '"_c', { noremap = true, silent = true })
 vim.keymap.set("v", "D", '"_d', { noremap = true, silent = true })
 
--- buffers
-vim.keymap.set("n", ";d", ":%bd|e#<CR>")
-vim.keymap.set("n", ";q", "<C-^>")
-
--- navigate funcs
-vim.keymap.set("n", ";w", "[m")
-vim.keymap.set("n", ";s", "]m")
-
 -- scrolling
 vim.keymap.set("n", "<C-u>", "10<C-y>")
 vim.keymap.set("n", "<C-d>", "10<C-e>")
