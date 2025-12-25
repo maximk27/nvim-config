@@ -1,6 +1,7 @@
 require("config.lazy")
 require("mine.misc")
 
+require("mine.telescope")
 require("mine.harpoon")
 require("mine.settings")
 require("mine.bindings")

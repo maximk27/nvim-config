@@ -1,8 +1,83 @@
 -- require("octo").setup({})
 -- vim.keymap.set(";w", ":Octo", "")
 
+local function gitsign_maps(bufnr)
+	local gitsigns = require("gitsigns")
+
+	local function map(mode, l, r, opts)
+		opts = opts or {}
+		opts.buffer = bufnr
+		vim.keymap.set(mode, l, r, opts)
+	end
+
+	-- Navigation
+	map("n", "]c", function()
+		if vim.wo.diff then
+			vim.cmd.normal({ "]c", bang = true })
+		else
+			gitsigns.nav_hunk("next")
+		end
+	end)
+
+	map("n", "[c", function()
+		if vim.wo.diff then
+			vim.cmd.normal({ "[c", bang = true })
+		else
+			gitsigns.nav_hunk("prev")
+		end
+	end)
+
+	-- Actions
+	map("n", ";a", gitsigns.stage_hunk)
+	map("n", ";w", gitsigns.reset_hunk)
+
+	map("v", ";a", function()
+		gitsigns.stage_hunk({ vim.fn.line("."), vim.fn.line("v") })
+	end)
+
+	map("v", ";w", function()
+		gitsigns.reset_hunk({ vim.fn.line("."), vim.fn.line("v") })
+	end)
+
+	map("n", ";A", gitsigns.stage_buffer)
+	map("n", ";W", gitsigns.reset_buffer)
+	-- map("n", "<leader>hp", gitsigns.preview_hunk)
+	-- map("n", "<leader>hi", gitsigns.preview_hunk_inline)
+
+	map("n", "<leader>hb", function()
+		gitsigns.blame_line({ full = true })
+	end)
+
+	map("n", ";d", function()
+		-- toggle diff
+		if vim.wo.diff then
+			vim.cmd("wincmd h")
+			vim.cmd("close")
+		else
+			gitsigns.diffthis()
+		end
+	end)
+
+	map("n", ";D", function()
+		gitsigns.diffthis("~")
+	end)
+
+	map("n", "<leader>hQ", function()
+		gitsigns.setqflist("all")
+	end)
+	map("n", "<leader>hq", gitsigns.setqflist)
+
+	-- Toggles
+	map("n", "<leader>tb", gitsigns.toggle_current_line_blame)
+	map("n", "<leader>tw", gitsigns.toggle_word_diff)
+
+	-- Text object
+	map({ "o", "x" }, "ih", gitsigns.select_hunk)
+end
+
 require("gitsigns").setup({
 	current_line_blame = true,
+	on_attach = gitsign_maps,
 })
 
 local actions = require("diffview.actions")
@@ -105,8 +180,12 @@ function exists_file_type(filetype)
 	return exists
 end
 
+-- TODO:
+-- overload this will all exiting binds run
+vim.keymap.set("n", "<leader>q", ":DiffviewClose<CR>", { silent = true })
+
 -- toggle open
-vim.keymap.set("n", ";d", function()
+vim.keymap.set("n", "<leader>d", function()
 	if exists_file_type("DiffviewFileHistory") then
 		vim.cmd("DiffviewClose")
 	end
@@ -118,7 +197,7 @@ vim.keymap.set("n", ";d", function()
 	end
 end, { noremap = true, silent = true })
 
-vim.keymap.set("n", ";a", function()
+vim.keymap.set("n", "<leader>f", function()
 	if exists_file_type("DiffviewFiles") then
 		vim.cmd("DiffviewClose")
 	end
@@ -139,24 +218,12 @@ neogit.setup({
 			["h"] = "Untrack",
 			["L"] = false,
 		},
+		popup = {
+			["f"] = false,
+		},
 	},
 })
 
 vim.keymap.set("n", ";s", function()
 	neogit.open({ kind = "replace" })
 end)
-
--- vim.keymap.set("n", ";s", function()
--- 	vim.api.nvim_command("Git")
--- 	reset()
--- end)
-
--- vim.api.nvim_create_autocmd("FileType", {
--- 	pattern = { "fugitiveblame", "fugitive", "git" },
--- 	callback = function()
--- 		vim.keymap.set("n", "J", "5j", { buffer = true })
--- 		vim.keymap.set("n", "K", "5k", { buffer = true })
--- 	end,
--- })
-
--- vim.keymap.set("n", ";d", ":%bd|e#<CR>")
