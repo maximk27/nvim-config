@@ -56,7 +56,9 @@ function notify_setup()
 		timeout = 1500,
 		fps = 60,
 	})
-	vim.keymap.set("n", "<leader>c", ":NotificationsClear<CR>", { silent = false })
+	vim.keymap.set("n", "<leader>c", function()
+		require("notify").dismiss({ silent = true, pending = true })
+	end)
 end
 
 ----------------------------------------------trit force--------------------------------------------------
@@ -191,115 +193,6 @@ function spectre_setup()
 end
 vim.keymap.set("n", ";v", ":Spectre<CR>")
 
-----------------------------------------------lsp setup--------------------------------------------------
-function lsp_setup()
-	require("mason").setup({})
-
-	vim.lsp.config("pyright", {
-		settings = {
-			["python"] = {
-				analysis = {
-					typeCheckingMode = "off",
-					autoSearchPaths = true,
-					useLibraryCodeForTypes = true,
-					diagnosticMode = "openFilesOnly",
-					extraPaths = { "." },
-				},
-			},
-		},
-	})
-
-	vim.lsp.config("lua_ls", {
-		settings = {
-			Lua = {
-				diagnostics = {
-					globals = { "vim" },
-				},
-			},
-		},
-	})
-
-	vim.lsp.config("rust-analyzer", {
-		cmd = { "rust-analyzer" },
-		filetypes = { "rust" },
-		root_markers = { "Cargo.toml" },
-		settings = {
-			["rust-analyzer"] = {
-				imports = {
-					granularity = {
-						group = "module",
-					},
-					prefix = "self",
-				},
-				cargo = {
-					buildScripts = {
-						enable = true,
-					},
-				},
-				procMacro = {
-					enable = true,
-				},
-			},
-		},
-	})
-
-	vim.lsp.config("gopls", {})
-
-	local ls_to_setup = { "pyright", "clangd", "lua_ls", "html", "ts_ls", "cmake", "rust-analyzer", "taplo" }
-	for _, server in ipairs(ls_to_setup) do
-		vim.lsp.enable(server)
-	end
-
-	vim.lsp.set_log_level("WARN")
-
-	function hoverLook()
-		vim.lsp.buf.hover({
-			border = { "╭", "─", "╮", "│", "╯", "─", "╰", "│" },
-		})
-	end
-
-	vim.api.nvim_create_autocmd("LspAttach", {
-		desc = "LSP actions",
-		callback = function(event)
-			local opts = { buffer = event.buf }
-			vim.keymap.set("n", "<C-k>", hoverLook, opts)
-			vim.keymap.set("n", "gd", "<cmd>lua vim.lsp.buf.definition()<cr>", opts)
-			vim.keymap.set("n", "gD", "<cmd>lua vim.lsp.buf.declaration()<cr>", opts)
-			vim.keymap.set("n", "gi", "<cmd>lua vim.lsp.buf.implementation()<cr>", opts)
-			vim.keymap.set("n", "go", "<cmd>lua vim.lsp.buf.type_definition()<cr>", opts)
-			vim.keymap.set("n", "gr", "<cmd>cexpr []<cr><cmd>lua vim.lsp.buf.references()<cr>", opts)
-			vim.keymap.set("n", ";r", "<cmd>lua vim.lsp.buf.rename()<cr>", opts)
-			-- vim.keymap.set({ "n", "x" }, "<F3>", "<cmd>lua vim.lsp.buf.format({async = true})<cr>", opts)
-			vim.keymap.set("n", "ge", "<cmd>lua vim.lsp.buf.code_action()<cr>", opts)
-			vim.keymap.set("n", "<M-l>", "<cmd>lua vim.diagnostic.open_float()<cr>", opts)
-			vim.keymap.set("n", "[d", "<cmd>lua vim.diagnostic.goto_prev()<cr>", opts)
-			vim.keymap.set("n", "]d", "<cmd>lua vim.diagnostic.goto_next()<cr>", opts)
-		end,
-	})
-
-	vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
-		border = "rounded",
-	})
-
-	vim.diagnostic.config({
-		virtual_text = false,
-		severity_sort = true,
-		signs = {
-			severity = { min = vim.diagnostic.severity.WARN },
-			text = {
-				[vim.diagnostic.severity.ERROR] = "●",
-				[vim.diagnostic.severity.WARN] = "●",
-				[vim.diagnostic.severity.HINT] = "●",
-				[vim.diagnostic.severity.INFO] = "●",
-			},
-		},
-		virtual_lines = false,
-		underline = false,
-		update_in_insert = false,
-		float = { border = "rounded" },
-	})
-end
-
 -----------------------------------------------suggestion setup--------------------------------------------------
 function suggestion_setup()
 	local capabilities = require("cmp_nvim_lsp").default_capabilities()
@@ -383,36 +276,6 @@ function treesitter_setup()
 		require("treesitter-context").go_to_context(vim.v.count1)
 	end, { silent = true })
 end
--------------------------------------------conform setup--------------------------------------------------
-function conform_setup()
-	local conform = require("conform")
-	conform.setup({
-		formatters_by_ft = {
-			lua = { "stylua" },
-			c = { "clang-format" },
-			cpp = { "clang-format" },
-			python = { "ruff_format" },
-			javascript = { "prettierd", "prettier" },
-			html = { "prettierd", "prettier" },
-			rust = { "rustfmt" },
-			go = { "gofmt" },
-			-- ["_"] = { "trim_whitespace" },
-		},
-		default_format_opts = {
-			lsp_format = "fallback",
-		},
-		format_on_save = {
-			-- These options will be passed to conform.format()
-			timeout_ms = 500,
-			lsp_format = "fallback",
-		},
-	})
-	vim.o.formatexpr = "v:lua.require'conform'.formatexpr()"
-
-	vim.api.nvim_set_keymap("n", "==", "gqq", { noremap = true, silent = true })
-	vim.api.nvim_set_keymap("v", "=", "gq", { noremap = true, silent = true })
-end
-
 -------------------------------------------comment setup--------------------------------------------------
 function comment_setup()
 	require("Comment").setup({
@@ -538,13 +401,30 @@ vim.keymap.set("n", "-", ":Oil<CR>", { silent = true })
 
 -------------------------------------------cpp setup--------------------------------------------
 
+-- set keybinds
 function cpp_setup()
-	vim.keymap.set("n", "<leader>lr", ":Leet random<CR>")
-	vim.keymap.set("n", "<leader>lq", ":Leet console<CR>")
-	vim.keymap.set("n", "<leader>le", ":Leet run<CR>")
-	vim.keymap.set("n", "<leader>lw", ":Leet desc<CR>")
-	vim.keymap.set("n", "<leader>lf", ":Leet list<CR>")
-	vim.keymap.set("n", "<leader>ld", ":Leet tabs<CR>")
-	vim.keymap.set("n", "<leader>ls", ":Leet submit<CR>")
-	vim.keymap.set("n", "<leader>ll", ":Leet lang<CR>")
+	-- change theme colors
+	vim.api.nvim_create_autocmd("FileType", {
+		pattern = "leetcode.nvim",
+		callback = function()
+			vim.api.nvim_set_hl(0, "leetcode_dyn_p", { fg = "#B0B0B0" })
+			vim.api.nvim_set_hl(0, "leetcode_dyn_pre", { fg = "#B0B0B0" })
+			vim.api.nvim_set_hl(0, "leetcode_ok", { fg = "#228B22" })
+			vim.api.nvim_set_hl(0, "leetcode_case_ok", { fg = "#228B22" })
+			vim.api.nvim_set_hl(0, "leetcode_case_focus_ok", { bg = "#228B22", fg = "#FFFFFF" })
+
+			-- keybinds
+			vim.keymap.set("n", "<leader>lr", ":Leet random<CR>")
+			vim.keymap.set("n", "<leader>lq", ":Leet console<CR>")
+			vim.keymap.set("n", "<leader>le", ":Leet run<CR>")
+			vim.keymap.set("n", "<leader>lw", ":Leet desc<CR>")
+			vim.keymap.set("n", "<leader>lf", ":Leet list<CR>")
+			vim.keymap.set("n", "<leader>ld", ":Leet tabs<CR>")
+			vim.keymap.set("n", "<leader>ls", ":Leet submit<CR>")
+			vim.keymap.set("n", "<leader>ll", ":Leet lang<CR>")
+			vim.keymap.set("n", "-", function()
+				vim.notify("nope")
+			end)
+		end,
+	})
 end

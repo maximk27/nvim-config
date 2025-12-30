@@ -1,8 +1,3 @@
-require("config.misc")
-require("config.harpoon")
-require("config.git")
-require("config.search")
-
 -- Bootstrap lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
@@ -22,6 +17,13 @@ vim.opt.rtp:prepend(lazypath)
 
 vim.g.mapleader = " "
 vim.g.maplocalleader = "\\"
+
+require("config.misc")
+require("config.harpoon")
+require("config.git")
+require("config.search")
+require("config.lsp_config")
+require("config.conform")
 
 -- Setup lazy.nvim
 require("lazy").setup({
@@ -72,7 +74,7 @@ require("lazy").setup({
 		-- markdown preview
 		{
 			"iamcco/markdown-preview.nvim",
-			event = "BufReadPre",
+			cmd = "MarkdownPreview",
 			build = "cd app && yarn install",
 			config = markdown_init,
 		},
@@ -84,8 +86,11 @@ require("lazy").setup({
 			dependencies = {
 				"williamboman/mason.nvim",
 			},
-			config = lsp_setup,
+			config = lsp_setup_config,
 		},
+
+		-- formatter
+		{ "stevearc/conform.nvim", event = "BufWritePre", opts = {}, config = conform_setup },
 
 		-- completion
 		{
@@ -110,9 +115,6 @@ require("lazy").setup({
 			dependencies = { "nvim-treesitter/nvim-treesitter-context" },
 			config = treesitter_setup,
 		},
-
-		-- formatter
-		{ "stevearc/conform.nvim", event = "BufWritePre", opts = {}, config = conform_setup },
 
 		-- comment
 		{ "numToStr/Comment.nvim", event = "VeryLazy", opts = {}, config = comment_setup },
@@ -142,12 +144,13 @@ require("lazy").setup({
 		-- cpp / contest
 		{
 			"kawre/leetcode.nvim",
+			build = ":TSUpdate html",
 			dependencies = {
 				"nvim-lua/plenary.nvim",
 				"MunifTanjim/nui.nvim",
 			},
 			lazy = "leetcode.nvim" ~= vim.fn.argv(0, -1),
-			opts = { arg = "leetcode.nvim" },
+			opts = { arg = "leetcode.nvim", lang = "rust" },
 			init = cpp_setup,
 		},
 
