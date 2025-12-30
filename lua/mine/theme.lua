@@ -35,6 +35,7 @@ local line = "#30313b"
 setBG("CursorLine", line)
 setBG("CursorLineNr", line)
 
+-- get rid of special hhighlight on args
 vim.api.nvim_set_hl(0, "NormalFloat", { link = "Normal" })
 vim.api.nvim_set_hl(0, "@parameter", { link = "Identifier" })
 vim.api.nvim_set_hl(0, "@variable", { link = "Identifier" })
@@ -42,6 +43,12 @@ vim.api.nvim_set_hl(0, "@variable.parameter", { link = "Identifier" })
 vim.api.nvim_set_hl(0, "@function.call", { link = "Function" })
 vim.api.nvim_set_hl(0, "@member", { link = "Identifier" })
 vim.api.nvim_set_hl(0, "@property", { link = "Identifier" })
+
+-- set comment
+-- local col = "#6a9955"
+-- local col = "#565f89"
+local col = "#34C22C"
+vim.api.nvim_set_hl(0, "@comment", { bg = nil, fg = col })
 
 -- set cursor to default terminal
 vim.cmd("highlight Cursor guifg=NONE guibg=NONE")

@@ -56,7 +56,7 @@ function notify_setup()
 		timeout = 1500,
 		fps = 60,
 	})
-	vim.keymap.set("n", "<leader>c", ":NotificationsClear<CR>", { silent = true })
+	vim.keymap.set("n", "<leader>c", ":NotificationsClear<CR>", { silent = false })
 end
 
 ----------------------------------------------trit force--------------------------------------------------
@@ -71,21 +71,6 @@ function tritforce_setup()
 			enabled = true,
 			level_up = true,
 			achievements = true,
-		},
-	})
-end
-
-----------------------------------------------icons--------------------------------------------------
-
-function icons_setup()
-	local devicons = require("nvim-web-devicons")
-	local hpp_icon, _ = devicons.get_icon_color("file.hpp", "hpp")
-
-	devicons.set_icon({
-		inl = {
-			icon = hpp_icon,
-			color = "#6cb6ff", -- lighter blue
-			name = "Inl",
 		},
 	})
 end
@@ -258,6 +243,8 @@ function lsp_setup()
 		},
 	})
 
+	vim.lsp.config("gopls", {})
+
 	local ls_to_setup = { "pyright", "clangd", "lua_ls", "html", "ts_ls", "cmake", "rust-analyzer", "taplo" }
 	for _, server in ipairs(ls_to_setup) do
 		vim.lsp.enable(server)
@@ -408,6 +395,7 @@ function conform_setup()
 			javascript = { "prettierd", "prettier" },
 			html = { "prettierd", "prettier" },
 			rust = { "rustfmt" },
+			go = { "gofmt" },
 			-- ["_"] = { "trim_whitespace" },
 		},
 		default_format_opts = {
@@ -513,7 +501,23 @@ function surround_setup()
 end
 
 -------------------------------------------file manager setup--------------------------------------------
+
 function oil_setup()
+	-- setup icons
+	local devicons = require("nvim-web-devicons")
+	devicons.setup({})
+
+	-- setup inl
+	local hpp_icon, _ = devicons.get_icon_color("file.hpp", "hpp")
+	devicons.set_icon({
+		inl = {
+			icon = hpp_icon,
+			color = "#6cb6ff",
+			name = "Inl",
+		},
+	})
+
+	-- setup edit hub
 	require("oil").setup({
 		view_options = {
 			show_hidden = true,
@@ -533,55 +537,14 @@ end
 vim.keymap.set("n", "-", ":Oil<CR>", { silent = true })
 
 -------------------------------------------cpp setup--------------------------------------------
+
 function cpp_setup()
-	local args = {
-		"-std=c++23",
-		"-O0",
-		"$(FNAME)",
-		"-o",
-		"$(FNOEXT)",
-	}
-
-	require("competitest").setup({
-		compile_command = {
-			cpp = { exec = "g++", args = args },
-			python = { exec = "pypy3" },
-		},
-		-- replace_received_testcases = true,
-		popup_ui = {
-			total_width = 0.9,
-			total_height = 0.95,
-			layout = {
-				{
-					1,
-					{
-						{ 1, "so" },
-						{
-							1,
-							{
-								{ 1, "tc" },
-								{ 1, "se" },
-							},
-						},
-					},
-				},
-				{ 1, {
-					{ 1, "eo" },
-					{ 1, "si" },
-				} },
-			},
-		},
-		template_file = {
-			cpp = "~/cpp/template/setup.cpp",
-			py = "~/cpp/template/setup.py",
-		},
-		received_contests_directory = "$(HOME)/cpp/contest/$(CONTEST)",
-		received_problems_path = "$(HOME)/cpp/problems/$(PROBLEM).$(FEXT)",
-		evaluate_template_modifiers = true,
-	})
+	vim.keymap.set("n", "<leader>lr", ":Leet random<CR>")
+	vim.keymap.set("n", "<leader>lq", ":Leet console<CR>")
+	vim.keymap.set("n", "<leader>le", ":Leet run<CR>")
+	vim.keymap.set("n", "<leader>lw", ":Leet desc<CR>")
+	vim.keymap.set("n", "<leader>lf", ":Leet list<CR>")
+	vim.keymap.set("n", "<leader>ld", ":Leet tabs<CR>")
+	vim.keymap.set("n", "<leader>ls", ":Leet submit<CR>")
+	vim.keymap.set("n", "<leader>ll", ":Leet lang<CR>")
 end
-
-vim.keymap.set("n", "<leader>le", ":CompetiTest run<CR>")
-vim.keymap.set("n", "<leader>lw", ":CompetiTest receive problem<CR>")
-vim.keymap.set("n", "<leader>lc", ":CompetiTest receive contest<CR>")
-vim.keymap.set("n", "<leader>lq", ":CompetiTest show_ui<CR>")

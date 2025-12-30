@@ -28,6 +28,7 @@ require("lazy").setup({
 	spec = {
 		-- themes
 		{ "widatama/vim-phoenix" },
+		{ "jacoborus/tender.vim" },
 
 		-- utilities
 		{
@@ -40,13 +41,22 @@ require("lazy").setup({
 		{ "folke/persistence.nvim", event = "BufReadPost", config = persistence_setup },
 		{ "rcarriga/nvim-notify", event = "VeryLazy", config = notify_setup },
 
+		-- gamify
 		{
 			"gisketch/triforce.nvim",
 			dependencies = { "nvzone/volt" },
 			event = "VeryLazy",
 			config = tritforce_setup,
 		},
-		{ "stevearc/oil.nvim", config = oil_setup },
+
+		-- hub + icons
+		{
+			"stevearc/oil.nvim",
+			config = oil_setup,
+			dependencies = {
+				"nvim-tree/nvim-web-devicons",
+			},
+		},
 
 		-- debugger
 		{
@@ -62,9 +72,9 @@ require("lazy").setup({
 		-- markdown preview
 		{
 			"iamcco/markdown-preview.nvim",
-			cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
+			event = "BufReadPre",
 			build = "cd app && yarn install",
-			init = markdown_init,
+			config = markdown_init,
 		},
 
 		-- LSP
@@ -113,7 +123,6 @@ require("lazy").setup({
 			tag = "0.1.8",
 			dependencies = {
 				"nvim-lua/plenary.nvim",
-				"BurntSushi/ripgrep",
 				"folke/todo-comments.nvim",
 				"folke/trouble.nvim",
 			},
@@ -121,9 +130,6 @@ require("lazy").setup({
 			cmd = { "Telescope" },
 			config = telescope_setup,
 		},
-
-		-- icons
-		{ "nvim-tree/nvim-web-devicons", event = "VeryLazy", config = icons_setup },
 
 		-- editing helpers
 		{ "windwp/nvim-autopairs", event = "InsertEnter", config = autopairs_setup },
@@ -134,7 +140,16 @@ require("lazy").setup({
 		{ "nvim-lualine/lualine.nvim", config = lualine_setup },
 
 		-- cpp / contest
-		{ "xeluxee/competitest.nvim", dependencies = "MunifTanjim/nui.nvim", event = "VeryLazy", config = cpp_setup },
+		{
+			"kawre/leetcode.nvim",
+			dependencies = {
+				"nvim-lua/plenary.nvim",
+				"MunifTanjim/nui.nvim",
+			},
+			lazy = "leetcode.nvim" ~= vim.fn.argv(0, -1),
+			opts = { arg = "leetcode.nvim" },
+			init = cpp_setup,
+		},
 
 		-- git
 		{
