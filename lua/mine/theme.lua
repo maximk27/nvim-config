@@ -6,7 +6,7 @@ function lualine_setup()
 	if vim.o.background == "dark" then
 		theme = "iceberg_dark"
 	else
-		theme = "iceberg_light"
+		theme = "gruvbox_light"
 	end
 
 	require("lualine").setup({
@@ -44,12 +44,6 @@ local function setBG(group, bg_color)
 end
 
 local function dark()
-	-- if exists fg, then preserve it when changing
-
-	vim.api.nvim_set_hl(0, "NonText", { bg = "NONE", fg = "NONE" })
-
-	vim.api.nvim_set_hl(0, "@lsp.typemod.variable.defaultLibrary", { fg = "#FF66CC" })
-	vim.api.nvim_set_hl(0, "Identifier", { fg = "#999999" })
 	vim.api.nvim_set_hl(0, "Visual", { bg = "#335E5E", blend = 80 })
 	vim.api.nvim_set_hl(0, "VisualNOS", { bg = "#335E5E", blend = 80 })
 
@@ -63,7 +57,6 @@ local function dark()
 	-- set comment
 	local col = "#34C22C"
 	vim.api.nvim_set_hl(0, "@comment", { bg = nil, fg = col })
-
 	vim.api.nvim_set_hl(0, "MatchParen", { fg = "#FFD700", bg = "#282a36", bold = true })
 end
 
@@ -74,12 +67,15 @@ local function light()
 		bold = true,
 	})
 
-	local line = "#E8E8E8"
+	vim.api.nvim_set_hl(0, "Visual", { bg = "#D0D0D0", blend = 30 })
+	vim.api.nvim_set_hl(0, "VisualNOS", { bg = "#D0D0D0", blend = 30 })
+
+	local line = "#FFF4D6"
 	setBG("CursorLine", line)
 	setBG("CursorLineNr", line)
 
 	-- set comment
-	local col = "#3C763D"
+	local col = "#2E8B57"
 	vim.api.nvim_set_hl(0, "@comment", { bg = nil, fg = col })
 end
 
@@ -91,6 +87,9 @@ function adjust_colors()
 	end
 
 	lualine_setup()
+
+	vim.api.nvim_set_hl(0, "@lsp.typemod.variable.defaultLibrary", { fg = "#FF66CC" })
+	vim.api.nvim_set_hl(0, "Identifier", { fg = "#999999" })
 
 	setBG("SignColumn", nil)
 	setBG("LineNr", nil)
@@ -131,19 +130,5 @@ vim.keymap.set("n", "<leader>=", function()
 		vim.cmd.colorscheme("phoenix")
 	end
 end)
-
-vim.g.PaperColor_Theme_Options = {
-	language = {
-		python = {
-			highlight_builtins = 0,
-		},
-		cpp = {
-			highlight_standard_library = 0,
-		},
-		c = {
-			highlight_builtins = 0,
-		},
-	},
-}
 
 vim.cmd.colorscheme("phoenix")
