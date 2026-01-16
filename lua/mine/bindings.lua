@@ -19,7 +19,6 @@ function make_title(title, width)
 	local side_length = math.floor((width - #title) / 2)
 	local side = string.rep("-", side_length)
 	local res = "// " .. side .. " " .. title .. " " .. side
-	print(res)
 	return res
 end
 
@@ -71,8 +70,11 @@ vim.keymap.set("n", "<M-j>", "5j", { noremap = true, silent = true })
 vim.keymap.set("v", "<M-k>", "5k", { noremap = true, silent = true })
 vim.keymap.set("v", "<M-j>", "5j", { noremap = true, silent = true })
 
-vim.keymap.set("n", "<C-e>", "<End>", { noremap = true, silent = true })
-vim.keymap.set("v", "<C-e>", "<End>", { noremap = true, silent = true })
+vim.keymap.set("n", "<C-e>", "2<C-e>2j", { noremap = true, silent = true })
+vim.keymap.set("v", "<C-e>", "2<C-e>2j", { noremap = true, silent = true })
+
+vim.keymap.set("n", "<C-y>", "2<C-y>2k", { noremap = true, silent = true })
+vim.keymap.set("v", "<C-y>", "2<C-y>2k", { noremap = true, silent = true })
 
 --insert edit
 vim.keymap.set("i", "<C-f>", "<Right>", { noremap = true, silent = true })
