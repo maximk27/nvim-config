@@ -1,13 +1,3 @@
-----------------------------------------------markdown--------------------------------------------------
-
-function markdown_init()
-	vim.g.mkdp_filetypes = { "markdown" }
-	vim.g.mkdp_auto_close = 0
-	vim.g.mkdp_refresh_slow = 1
-end
-
-vim.keymap.set("n", "<leader>p", ":MarkdownPreview<CR>")
-
 ----------------------------------------------persistence--------------------------------------------------
 function persistence_setup()
 	require("persistence").setup()

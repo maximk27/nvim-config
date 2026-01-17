@@ -71,14 +71,6 @@ require("lazy").setup({
 		-- find and replace
 		{ "nvim-pack/nvim-spectre", cmd = { "Spectre" }, config = spectre_setup },
 
-		-- markdown preview
-		{
-			"iamcco/markdown-preview.nvim",
-			event = { "BufReadPre" },
-			build = "cd app && yarn install",
-			config = markdown_init,
-		},
-
 		-- LSP
 		{
 			"neovim/nvim-lspconfig",
