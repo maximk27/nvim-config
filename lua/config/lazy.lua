@@ -31,6 +31,7 @@ require("lazy").setup({
 		-- themes
 		{ "widatama/vim-phoenix" },
 		{ "yorickpeterse/vim-paper" },
+		{ "NLKNguyen/papercolor-theme" },
 
 		-- utilities
 		{

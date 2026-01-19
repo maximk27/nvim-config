@@ -69,6 +69,9 @@ local function light()
 		bold = true,
 	})
 
+	local normal = "#F2EEDE"
+	setBG("Normal", normal)
+
 	vim.api.nvim_set_hl(0, "Visual", { bg = "#D0D0D0", blend = 30 })
 	vim.api.nvim_set_hl(0, "VisualNOS", { bg = "#D0D0D0", blend = 30 })
 
@@ -94,6 +97,7 @@ function adjust_colors()
 
 	vim.api.nvim_set_hl(0, "@lsp.typemod.variable.defaultLibrary", { fg = "#FF66CC" })
 
+	setBG("EndOfBuffer", nil)
 	setBG("SignColumn", nil)
 	setBG("LineNr", nil)
 	setBG("NormalNC", nil)
