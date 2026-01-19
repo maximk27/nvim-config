@@ -93,11 +93,13 @@ end
 ----------------------------------- setup -----------------------------------
 local function navigation_setup()
 	local harpoon = require("harpoon")
-	vim.keymap.set("n", ";e", function()
-		harpoon.ui:toggle_quick_menu(harpoon:list())
-	end)
-
 	local keys = M.keys
+
+	-- clear
+	vim.keymap.set("n", "<leader>E", function()
+		harpoon:list():clear()
+		update_preview()
+	end)
 
 	-- from harpoon
 	function create_item(name)

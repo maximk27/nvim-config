@@ -222,7 +222,7 @@ function git_setup()
 		},
 	})
 
-	vim.keymap.set("n", ";s", function()
+	vim.keymap.set("n", "<leader>s", function()
 		neogit.open({ kind = "replace" })
 	end)
 end
