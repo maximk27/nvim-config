@@ -95,19 +95,58 @@ function lsp_setup_config()
 			vim.keymap.set("n", "gd", "<cmd>lua vim.lsp.buf.definition()<cr>", opts)
 			vim.keymap.set("n", "gD", "<cmd>lua vim.lsp.buf.declaration()<cr>", opts)
 
-			-- open buffer in side bar
-			vim.keymap.set("n", "<C-w>k", function()
-				vim.cmd("vsplit")
+			-- has split in dir
+			-- returns the id if exists
+			--  else -1
+			local function has_split(dir)
+				local win1 = vim.api.nvim_get_current_win()
+				vim.cmd("wincmd " .. dir)
+				local win2 = vim.api.nvim_get_current_win()
+				return win1 ~= win2 and win2 or -1
+			end
+
+			local function open()
+				local win1 = vim.api.nvim_get_current_win()
+
+				-- pos
+				local buf = vim.api.nvim_get_current_buf()
+				local cursor = vim.api.nvim_win_get_cursor(win1)
+
+				-- if has split in either dir
+				local left = has_split("h")
+				local right = has_split("l")
+
+				local function follow(other)
+					vim.api.nvim_win_set_buf(other, buf)
+					vim.api.nvim_win_set_cursor(other, cursor)
+					vim.api.nvim_set_current_win(other)
+				end
+
+				if left ~= -1 then
+					-- left
+					follow(left)
+				elseif right ~= -1 then
+					-- right
+					follow(right)
+				else
+					-- no split, we make
+					vim.cmd("vsplit")
+				end
+
+				-- jump
 				vim.cmd("lua vim.lsp.buf.definition()")
-			end, opts)
+			end
+
+			-- open buffer in side bar and goto
+			vim.keymap.set("n", "<C-w>k", open, opts)
 
 			vim.keymap.set("n", "gi", "<cmd>lua vim.lsp.buf.implementation()<cr>", opts)
 			vim.keymap.set("n", "go", "<cmd>lua vim.lsp.buf.type_definition()<cr>", opts)
 			vim.keymap.set("n", "gr", "<cmd>cexpr []<cr><cmd>lua vim.lsp.buf.references()<cr>", opts)
 			vim.keymap.set("n", ";r", "<cmd>lua vim.lsp.buf.rename()<cr>", opts)
 			-- vim.keymap.set({ "n", "x" }, "<F3>", "<cmd>lua vim.lsp.buf.format({async = true})<cr>", opts)
-			vim.keymap.set("n", "ge", "<cmd>lua vim.lsp.buf.code_action()<cr>", opts)
 			vim.keymap.set("n", "<C-j>", "<cmd>lua vim.diagnostic.open_float()<cr>", opts)
+			vim.keymap.set("n", "ge", "<cmd>lua vim.lsp.buf.code_action()<cr>", opts)
 			vim.keymap.set("n", "[d", "<cmd>lua vim.diagnostic.goto_prev()<cr>", opts)
 			vim.keymap.set("n", "]d", "<cmd>lua vim.diagnostic.goto_next()<cr>", opts)
 		end,

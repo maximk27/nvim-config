@@ -36,6 +36,7 @@ function lualine_setup()
 		},
 	})
 end
+
 --------------------------------- overrides ---------------------------------
 local function setBG(group, bg_color)
 	local current_hl = vim.api.nvim_get_hl_by_name(group, true)
@@ -56,7 +57,7 @@ local function dark()
 
 	-- set comment
 	local col = "#34C22C"
-	vim.api.nvim_set_hl(0, "@comment", { bg = nil, fg = col })
+	vim.api.nvim_set_hl(0, "Comment", { bg = nil, fg = col })
 	vim.api.nvim_set_hl(0, "MatchParen", { fg = "#FFD700", bg = "#282a36", bold = true })
 
 	vim.api.nvim_set_hl(0, "Identifier", { fg = "#999999" })
@@ -81,9 +82,13 @@ local function light()
 
 	-- set comment
 	local col = "#D2691E"
-	vim.api.nvim_set_hl(0, "@comment", { bg = nil, fg = col })
+	vim.api.nvim_set_hl(0, "Comment", { bg = nil, fg = col })
 
-	vim.api.nvim_set_hl(0, "Identifier", { fg = "#666666" })
+	-- member vars etc
+	vim.api.nvim_set_hl(0, "Identifier", { fg = "#777777" })
+
+	-- types
+	vim.api.nvim_set_hl(0, "Keyword", { fg = "#007373" })
 end
 
 function adjust_colors()
@@ -95,7 +100,7 @@ function adjust_colors()
 
 	lualine_setup()
 
-	vim.api.nvim_set_hl(0, "@lsp.typemod.variable.defaultLibrary", { fg = "#FF66CC" })
+	vim.api.nvim_set_hl(0, "Function", { link = "Normal", bg = nil })
 
 	setBG("EndOfBuffer", nil)
 	setBG("SignColumn", nil)
@@ -139,5 +144,10 @@ vim.keymap.set("n", "<leader>=", function()
 		vim.cmd.colorscheme("phoenix")
 	end
 end)
+
+vim.keymap.set("n", "<leader>+", function()
+	local result = vim.treesitter.get_captures_at_cursor(0)
+	print(vim.inspect(result))
+end, { noremap = true, silent = false })
 
 vim.cmd.colorscheme("phoenix")

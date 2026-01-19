@@ -242,7 +242,7 @@ function treesitter_setup()
 	end
 	setBG("TreesitterContextBottom", "#203034")
 
-	vim.keymap.set("n", "<C-a>", function()
+	vim.keymap.set("n", "<C-h>", function()
 		require("treesitter-context").go_to_context(vim.v.count1)
 	end, { silent = true })
 end
