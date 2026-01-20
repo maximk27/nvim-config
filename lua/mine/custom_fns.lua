@@ -18,7 +18,7 @@ function make_title(title, width)
 	-- round down
 	local side_length = math.floor((width - #title) / 2)
 	local side = string.rep("-", side_length)
-	local res = "// " .. side .. " " .. title .. " " .. side
+	local res = "/* " .. side .. " " .. title .. " " .. side .. " */"
 	return res
 end
 
@@ -28,7 +28,7 @@ vim.keymap.set("n", "<leader>-", function()
 		return
 	end
 
-	local text = make_title(title, 75)
+	local text = make_title(title, 72)
 	-- put the text at curr line
 	vim.api.nvim_set_current_line(text)
 end)

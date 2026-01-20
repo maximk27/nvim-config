@@ -1,5 +1,4 @@
 ----------------------------------- state -----------------------------------
-
 local M = {}
 M.buf = nil
 M.keys = "qwerasdfzxcv"
@@ -10,11 +9,11 @@ local function valid_buf()
 end
 
 local function get_buf()
+	-- create if not valid
 	if not valid_buf() then
 		M.buf = vim.api.nvim_create_buf(false, true)
 	end
 
-	-- create if not valid
 	return M.buf
 end
 
@@ -119,18 +118,26 @@ local function navigation_setup()
 		}
 	end
 
+	local function should_ignore()
+		local name = vim.api.nvim_buf_get_name(0)
+
+		-- unnamed or oil file
+		return not name or name == "" or vim.bo.filetype == "oil"
+	end
+
 	local function set_mark(idx)
 		local path = vim.fn.expand("%:p")
 
-		if path == nil or vim.bo.filetype == "oil" then
+		if should_ignore() then
 			vim.notify("Harpoon: no file to mark", vim.log.levels.WARN)
 			return
 		end
 
 		item = create_item(path)
 
-		-- set path
 		harpoon:list():replace_at(idx, item)
+
+		update_preview()
 	end
 
 	local function go_mark(idx)
@@ -147,7 +154,6 @@ local function navigation_setup()
 		local letter = string.sub(keys, idx, idx)
 		vim.keymap.set("n", "m" .. letter, function()
 			set_mark(idx)
-			update_preview()
 		end)
 		vim.keymap.set("n", "'" .. letter, function()
 			go_mark(idx)
@@ -171,3 +177,7 @@ function harpoon_setup()
 	navigation_setup()
 	preview_setup()
 end
+
+-- just cuz
+vim.keymap.set("n", "mm", "mM")
+vim.keymap.set("n", "''", "'M")

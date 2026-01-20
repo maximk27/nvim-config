@@ -6,7 +6,7 @@ vim.keymap.set("i", "<C-c>", "<ESC>", { noremap = true, silent = true })
 vim.keymap.set("n", ";w", ":w")
 vim.keymap.set("n", ";q", ":q")
 
--- v and V for pinkky lol
+-- for pinky lol
 vim.keymap.set("n", "v", "V", { noremap = true })
 vim.keymap.set("n", "V", "v", { noremap = true })
 

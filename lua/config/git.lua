@@ -215,9 +215,13 @@ function git_setup()
 				["f"] = "Toggle",
 				["h"] = "Untrack",
 				["L"] = false,
+				["I"] = false,
 			},
 			popup = {
 				["f"] = false,
+				["Z"] = false,
+				["i"] = "StashPopup",
+				["I"] = "IgnorePopup",
 			},
 		},
 	})

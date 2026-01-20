@@ -137,8 +137,16 @@ function lsp_setup_config()
 				vim.cmd("lua vim.lsp.buf.definition()")
 			end
 
+			-- ga (gives char hex and octal)
+
 			-- open buffer in side bar and goto
 			vim.keymap.set("n", "<C-w>k", open, opts)
+
+			-- code actions
+			vim.keymap.set("n", "ge", vim.lsp.buf.code_action, {})
+			vim.keymap.set("v", "ge", function()
+				vim.lsp.buf.code_action({ range = vim.api.nvim_buf_get_extmark_by_id(0, "visual_selection", 0, 0, {}) })
+			end, {})
 
 			vim.keymap.set("n", "gi", "<cmd>lua vim.lsp.buf.implementation()<cr>", opts)
 			vim.keymap.set("n", "go", "<cmd>lua vim.lsp.buf.type_definition()<cr>", opts)
@@ -146,7 +154,6 @@ function lsp_setup_config()
 			vim.keymap.set("n", ";r", "<cmd>lua vim.lsp.buf.rename()<cr>", opts)
 			-- vim.keymap.set({ "n", "x" }, "<F3>", "<cmd>lua vim.lsp.buf.format({async = true})<cr>", opts)
 			vim.keymap.set("n", "<C-j>", "<cmd>lua vim.diagnostic.open_float()<cr>", opts)
-			vim.keymap.set("n", "ge", "<cmd>lua vim.lsp.buf.code_action()<cr>", opts)
 			vim.keymap.set("n", "[d", "<cmd>lua vim.diagnostic.goto_prev()<cr>", opts)
 			vim.keymap.set("n", "]d", "<cmd>lua vim.diagnostic.goto_next()<cr>", opts)
 		end,

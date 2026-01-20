@@ -183,7 +183,13 @@ function suggestion_setup()
 			-- ["<C-p>"] = cmp.config.disable,
 			["<C-e>"] = cmp.config.disable,
 			["<Tab>"] = cmp.mapping.confirm({ select = true, behavior = cmp.ConfirmBehavior.Replace }),
-			["<C-Space>"] = cmp.mapping.complete(),
+			["<C-Space>"] = function()
+				if ls.expand_or_jumpable() then
+					ls.expand_or_jump()
+				else
+					cmp.mapping.complete()
+				end
+			end,
 			["<C-n>"] = cmp.mapping.select_next_item(),
 			["<C-p>"] = cmp.mapping.select_prev_item(),
 		},
@@ -282,6 +288,7 @@ function autopairs_setup()
 	local cmp_autopairs = require("nvim-autopairs.completion.cmp")
 	require("cmp").event:on("confirm_done", cmp_autopairs.on_confirm_done())
 
+	-- so that {<space> ->  { <cursor> }
 	function rule1(a1, ins, a2, lang)
 		autopairs.add_rule(Rule(ins, ins, lang)
 			:with_pair(function(opts)
@@ -300,7 +307,6 @@ function autopairs_setup()
 	rule1("[", " ", "]")
 
 	vim.keymap.set("i", "@{<CR>", "{<CR>};<ESC>O", { noremap = true, silent = true })
-	--
 end
 
 -------------------------------------------autotag setup--------------------------------------------
