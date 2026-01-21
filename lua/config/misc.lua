@@ -1,3 +1,15 @@
+--------------------------------- treesj ---------------------------------
+
+function treejs_setup()
+	require("treesj").setup({
+		use_default_keymaps = false,
+	})
+	vim.keymap.set({ "n", "i" }, "<C-m>", require("treesj").toggle)
+	vim.keymap.set({ "n", "i" }, "<C-M>", function()
+		require("treesj").toggle({ split = { recursive = true } })
+	end)
+end
+
 ----------------------------------------------persistence--------------------------------------------------
 function persistence_setup()
 	require("persistence").setup()
@@ -184,6 +196,7 @@ function suggestion_setup()
 			["<Tab>"] = cmp.mapping.confirm({ select = true, behavior = cmp.ConfirmBehavior.Replace }),
 			["<C-Space>"] = function()
 				if ls.jumpable(1) then
+					print("jumpable")
 					-- jump next arg
 					ls.expand_or_jump()
 				elseif cmp.visible() then

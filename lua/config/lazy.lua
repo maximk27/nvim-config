@@ -33,6 +33,13 @@ require("lazy").setup({
 		{ "yorickpeterse/vim-paper" },
 		{ "NLKNguyen/papercolor-theme" },
 
+		{
+			"Wansmer/treesj",
+			keys = { "<C-m>", "<C-M>" },
+			dependencies = { "nvim-treesitter/nvim-treesitter" }, -- if you install parsers with `nvim-treesitter`
+			config = treejs_setup,
+		},
+
 		-- utilities
 		{
 			"ThePrimeagen/harpoon",
