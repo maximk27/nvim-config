@@ -1,3 +1,5 @@
+vim.g.lsp_disable_default_keymaps = true
+
 function lsp_setup_config()
 	require("mason").setup({})
 
@@ -91,6 +93,8 @@ function lsp_setup_config()
 		desc = "LSP actions",
 		callback = function(event)
 			local opts = { buffer = event.buf }
+
+			-- set
 			vim.keymap.set("n", "<C-k>", hoverLook, opts)
 			vim.keymap.set("n", "gd", "<cmd>lua vim.lsp.buf.definition()<cr>", opts)
 			vim.keymap.set("n", "gD", "<cmd>lua vim.lsp.buf.declaration()<cr>", opts)
@@ -150,7 +154,7 @@ function lsp_setup_config()
 
 			vim.keymap.set("n", "gi", "<cmd>lua vim.lsp.buf.implementation()<cr>", opts)
 			vim.keymap.set("n", "go", "<cmd>lua vim.lsp.buf.type_definition()<cr>", opts)
-			vim.keymap.set("n", "gr", "<cmd>cexpr []<cr><cmd>lua vim.lsp.buf.references()<cr>", opts)
+			vim.keymap.set("n", "gk", "<cmd>cexpr []<cr><cmd>lua vim.lsp.buf.references()<cr>", opts)
 			vim.keymap.set("n", ";r", "<cmd>lua vim.lsp.buf.rename()<cr>", opts)
 			-- vim.keymap.set({ "n", "x" }, "<F3>", "<cmd>lua vim.lsp.buf.format({async = true})<cr>", opts)
 			vim.keymap.set("n", "<C-j>", "<cmd>lua vim.diagnostic.open_float()<cr>", opts)

@@ -1,5 +1,4 @@
 -- change theme light/dark
-
 ------------------------------------------lualine--------------------------------------------------
 function lualine_setup()
 	local theme
@@ -57,10 +56,16 @@ local function dark()
 
 	-- set comment
 	local col = "#34C22C"
-	vim.api.nvim_set_hl(0, "Comment", { bg = nil, fg = col })
-	vim.api.nvim_set_hl(0, "MatchParen", { fg = "#FFD700", bg = "#282a36", bold = true })
+	-- local col = "#6A737D"
+	-- local col = "#5C6370"
+
+	vim.api.nvim_set_hl(0, "@comment", { bg = nil, fg = col })
+	-- vim.api.nvim_set_hl(0, "MatchParen", { fg = "#FFD700", bg = "#282a36", bold = true })
+	vim.api.nvim_set_hl(0, "MatchParen", { fg = "#FFFFFF", bg = "#282a36", bold = true })
 
 	vim.api.nvim_set_hl(0, "Identifier", { fg = "#999999" })
+
+	vim.api.nvim_set_hl(0, "@lsp.typemod.variable.defaultLibrary", { fg = "#FF66CC" })
 end
 
 local function light()
@@ -82,13 +87,15 @@ local function light()
 
 	-- set comment
 	local col = "#D2691E"
-	vim.api.nvim_set_hl(0, "Comment", { bg = nil, fg = col })
+	vim.api.nvim_set_hl(0, "@comment", { bg = nil, fg = col })
 
 	-- member vars etc
 	vim.api.nvim_set_hl(0, "Identifier", { fg = "#777777" })
 
 	-- types
 	vim.api.nvim_set_hl(0, "Keyword", { fg = "#007373" })
+
+	vim.api.nvim_set_hl(0, "@lsp.typemod.variable.defaultLibrary", { fg = "#CC52A3" })
 end
 
 function adjust_colors()

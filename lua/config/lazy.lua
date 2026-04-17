@@ -32,10 +32,15 @@ require("lazy").setup({
 		{ "widatama/vim-phoenix" },
 		{ "yorickpeterse/vim-paper" },
 		{ "NLKNguyen/papercolor-theme" },
+		{ "Mofiqul/vscode.nvim" },
+
+		{ "hiphish/rainbow-delimiters.nvim", event = "BufReadPost", config = rainbow_setup },
+
+		{ "nat-418/boole.nvim", event = "BufReadPost", config = bool_setup },
 
 		{
 			"Wansmer/treesj",
-			keys = { "<C-m>", "<C-M>" },
+			keys = { "<C-h>", "<C-H>" },
 			dependencies = { "nvim-treesitter/nvim-treesitter" }, -- if you install parsers with `nvim-treesitter`
 			config = treejs_setup,
 		},
@@ -111,7 +116,7 @@ require("lazy").setup({
 		{
 			"nvim-treesitter/nvim-treesitter",
 			build = ":TSUpdate",
-			event = "BufReadPost",
+			event = "BufreadPre",
 			dependencies = { "nvim-treesitter/nvim-treesitter-context" },
 			config = treesitter_setup,
 		},

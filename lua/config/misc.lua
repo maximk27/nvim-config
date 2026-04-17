@@ -1,11 +1,83 @@
+--------------------------- rainbow delimiters ---------------------------
+
+---@type rainbow_delimiters.config
+vim.g.rainbow_delimiters = {
+	strategy = {
+		[""] = "rainbow-delimiters.strategy.global",
+		vim = "rainbow-delimiters.strategy.local",
+	},
+	query = {
+		[""] = "rainbow-delimiters",
+		lua = "rainbow-blocks",
+	},
+	priority = {
+		[""] = 110,
+		lua = 210,
+	},
+	highlight = {
+		"RainbowDelimiterRed",
+		"RainbowDelimiterYellow",
+		"RainbowDelimiterBlue",
+		"RainbowDelimiterOrange",
+		"RainbowDelimiterGreen",
+		"RainbowDelimiterViolet",
+		"RainbowDelimiterCyan",
+	},
+}
+
+function rainbow_setup() end
+
+---------------------------------- bool ----------------------------------
+function bool_setup()
+	local letters = {
+		"a",
+		"b",
+		"c",
+		"d",
+		"e",
+		"f",
+		"g",
+		"h",
+		"i",
+		"j",
+		"k",
+		"l",
+		"m",
+		"n",
+		"o",
+		"p",
+		"q",
+		"r",
+		"s",
+		"t",
+		"u",
+		"v",
+		"w",
+		"x",
+		"y",
+		"z",
+	}
+
+	require("boole").setup({
+		mappings = {
+			increment = "<C-a>",
+			decrement = "<C-x>",
+		},
+		additions = {
+			{ "prev", "curr", "next" },
+			letters,
+		},
+	})
+end
+
 --------------------------------- treesj ---------------------------------
 
 function treejs_setup()
 	require("treesj").setup({
 		use_default_keymaps = false,
 	})
-	vim.keymap.set({ "n", "i" }, "<C-m>", require("treesj").toggle)
-	vim.keymap.set({ "n", "i" }, "<C-M>", function()
+	vim.keymap.set({ "n", "i" }, "<C-h>", require("treesj").toggle)
+	vim.keymap.set({ "n", "i" }, "<C-H>", function()
 		require("treesj").toggle({ split = { recursive = true } })
 	end)
 end
@@ -193,10 +265,9 @@ function suggestion_setup()
 		mapping = {
 			-- ["<C-n>"] = cmp.config.disable,
 			-- ["<C-p>"] = cmp.config.disable,
-			["<Tab>"] = cmp.mapping.confirm({ select = true, behavior = cmp.ConfirmBehavior.Replace }),
+			["<Tab>"] = cmp.mapping.confirm({ select = true, behavior = cmp.ConfirmBehavior.Insert }),
 			["<C-Space>"] = function()
 				if ls.jumpable(1) then
-					print("jumpable")
 					-- jump next arg
 					ls.expand_or_jump()
 				elseif cmp.visible() then
@@ -265,7 +336,7 @@ function treesitter_setup()
 	end
 	setBG("TreesitterContextBottom", "#203034")
 
-	vim.keymap.set("n", "<C-h>", function()
+	vim.keymap.set("n", "<C-[>", function()
 		require("treesitter-context").go_to_context(vim.v.count1)
 	end, { silent = true })
 end
@@ -343,10 +414,10 @@ function surround_setup()
 	require("nvim-surround").setup({
 		move_cursor = false,
 		keymaps = {
-			normal = "vs",
-			normal_cur = "vss",
-			normal_line = "vS",
-			normal_cur_line = "vSS",
+			normal = "ys",
+			normal_cur = "yss",
+			normal_line = "yS",
+			normal_cur_line = "ySS",
 			visual = "s",
 			visual_line = "gs",
 			delete = "ds",
