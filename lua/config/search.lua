@@ -14,7 +14,7 @@ function telescope_setup()
 					width = 0.9,
 					height = 0.8,
 					preview_cutoff = 0,
-					preview_width = 0.6,
+					preview_width = 0.3,
 				},
 			},
 			file_ignore_patterns = {
@@ -33,16 +33,8 @@ function telescope_setup()
 	})
 
 	setBG("TelescopeSelection", "#3a3d45")
-	vim.keymap.set("n", ";f", ":Telescope git_branches<CR>", { silent = true })
-
 	local builtin = require("telescope.builtin")
 	local utils = require("telescope.utils")
-
-	vim.keymap.set("n", ";l", builtin.find_files)
-
-	vim.keymap.set("n", ";g", builtin.live_grep)
-
-	require("telescope").load_extension("csharpls_definition")
 
 	-------------------------------------------------------------- trouble / todo
 
@@ -77,6 +69,44 @@ function telescope_setup()
 	vim.keymap.set("n", "[t", function()
 		require("todo-comments").jump_prev()
 	end, { desc = "Previous todo comment" })
+end
 
-	vim.keymap.set("n", ";t", "<CMD>TodoTelescope<CR>")
+function telescope_keys()
+	local themes = require("telescope.themes")
+	local opt = {}
+
+	return {
+		{
+			";l",
+			function()
+				require("telescope.builtin").git_status(opt)
+			end,
+			desc = "Search Modified",
+		},
+		{
+			";g",
+			function()
+				require("telescope.builtin").live_grep(opt)
+			end,
+			desc = "Search Grep",
+		},
+		{
+			";f",
+			function()
+				require("telescope.builtin").find_files(opt)
+			end,
+			desc = "Search Recent",
+		},
+		{
+			";t",
+			":TodoTelescope<CR>",
+			desc = "Search Todo",
+		},
+		{
+			";c",
+			function()
+				require("telescope.builtin").diagnostics({ severity_limit = vim.diagnostic.severity.ERROR })
+			end,
+		},
+	}
 end

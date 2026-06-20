@@ -101,22 +101,6 @@ function notify_setup()
 	end)
 end
 
-----------------------------------------------trit force--------------------------------------------------
-function tritforce_setup()
-	require("triforce").setup({
-		xp_rewards = {
-			char = 1,
-			line = 0,
-			save = 0,
-		},
-		notifications = {
-			enabled = true,
-			level_up = true,
-			achievements = true,
-		},
-	})
-end
-
 ----------------------------------------------debugger--------------------------------------------------
 
 function debug_setup()

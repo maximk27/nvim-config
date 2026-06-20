@@ -59,14 +59,6 @@ require("lazy").setup({
 		{ "folke/persistence.nvim", event = "BufReadPost", config = persistence_setup },
 		{ "rcarriga/nvim-notify", event = "VeryLazy", config = notify_setup },
 
-		-- gamify
-		{
-			"gisketch/triforce.nvim",
-			dependencies = { "nvzone/volt" },
-			event = "VeryLazy",
-			config = tritforce_setup,
-		},
-
 		-- hub + icons
 		{
 			"stevearc/oil.nvim",
@@ -124,6 +116,7 @@ require("lazy").setup({
 			event = "BufreadPre",
 			dependencies = { "nvim-treesitter/nvim-treesitter-context" },
 			config = treesitter_setup,
+			keys = telescope_keys,
 		},
 
 		-- comment
@@ -137,6 +130,7 @@ require("lazy").setup({
 				"nvim-lua/plenary.nvim",
 				"folke/todo-comments.nvim",
 				"folke/trouble.nvim",
+				"mollerhoj/telescope-recent-files.nvim",
 			},
 			event = { "BufReadPre" },
 			cmd = { "Telescope" },

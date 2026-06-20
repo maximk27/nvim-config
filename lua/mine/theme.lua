@@ -26,7 +26,6 @@ function lualine_setup()
 					"diagnostics",
 					sources = { "nvim_lsp" },
 				},
-				require("triforce.lualine").level,
 			},
 			lualine_y = {
 				"filetype",
