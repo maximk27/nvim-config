@@ -28,3 +28,5 @@
 ### assembly
 - lsp: [asm-lsp](https://github.com/bergercookie/asm-lsp)
 
+### lisp
+- lsp [cl-lsp](https://github.com/cxxxr/cl-lsp)

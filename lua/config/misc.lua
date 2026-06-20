@@ -15,13 +15,9 @@ vim.g.rainbow_delimiters = {
 		lua = 210,
 	},
 	highlight = {
-		"RainbowDelimiterRed",
+		"Normal",
 		"RainbowDelimiterYellow",
-		"RainbowDelimiterBlue",
 		"RainbowDelimiterOrange",
-		"RainbowDelimiterGreen",
-		"RainbowDelimiterViolet",
-		"RainbowDelimiterCyan",
 	},
 }
 
@@ -95,11 +91,12 @@ end)
 function notify_setup()
 	vim.notify = require("notify")
 	require("notify").setup({
+		background_colour = "#000000",
 		render = "compact",
 		timeout = 1500,
 		fps = 60,
 	})
-	vim.keymap.set("n", "<leader>c", function()
+	vim.keymap.set("n", "<leader>n", function()
 		require("notify").dismiss({ silent = true, pending = true })
 	end)
 end
@@ -163,8 +160,6 @@ function debug_setup()
 	})
 
 	vim.fn.sign_define("DapBreakpoint", { text = "▲", texthl = "DapBreakpointColor", linehl = "", numhl = "" })
-
-	require("dap.ext.vscode").load_launchjs(nil, {})
 
 	dap.adapters.cppdbg = {
 		id = "cppdbg",
@@ -236,82 +231,10 @@ function spectre_setup()
 end
 vim.keymap.set("n", ";v", ":Spectre<CR>")
 
------------------------------------------------suggestion setup--------------------------------------------------
-function suggestion_setup()
-	local capabilities = require("cmp_nvim_lsp").default_capabilities()
-
-	vim.lsp.config("*", {
-		capabilities = capabilities,
-		root_markers = { ".git" },
-	})
-
-	local ls = require("luasnip")
-
-	require("luasnip.loaders.from_vscode").lazy_load()
-
-	require("nvim-highlight-colors").setup({})
-
-	local cmp = require("cmp")
-	cmp.setup({
-		preselect = cmp.PreselectMode.None,
-		formatting = {
-			format = require("nvim-highlight-colors").format,
-		},
-		snippet = {
-			expand = function(args)
-				ls.lsp_expand(args.body)
-			end,
-		},
-		mapping = {
-			-- ["<C-n>"] = cmp.config.disable,
-			-- ["<C-p>"] = cmp.config.disable,
-			["<Tab>"] = cmp.mapping.confirm({ select = true, behavior = cmp.ConfirmBehavior.Insert }),
-			["<C-Space>"] = function()
-				if ls.jumpable(1) then
-					-- jump next arg
-					ls.expand_or_jump()
-				elseif cmp.visible() then
-					-- close completion
-					cmp.close()
-				else
-					-- show completion
-					cmp.complete()
-				end
-			end,
-			["<C-n>"] = cmp.mapping.select_next_item(),
-			["<C-p>"] = cmp.mapping.select_prev_item(),
-		},
-		window = {
-			completion = cmp.config.window.bordered({
-				border = { "╭", "─", "╮", "│", "╯", "─", "╰", "│" },
-			}),
-			documentation = cmp.config.window.bordered({
-				border = { "╭", "─", "╮", "│", "╯", "─", "╰", "│" },
-			}),
-		},
-		performance = {
-			debounce = 60,
-			throttle = 30,
-			fetching_timeout = 200,
-			max_view_entries = 4,
-		},
-		sources = cmp.config.sources({
-			{ name = "nvim_lsp" },
-			{ name = "luasnip" },
-			{ name = "path" },
-			{ name = "buffer" },
-		}),
-	})
-
-	require("lsp_signature").setup({
-		floating_window = true,
-		floating_window_above_cur_line = true,
-		max_height = 3,
-		hint_enable = false,
-	})
-end
-
 -------------------------------------------tree-sitter setup--------------------------------------------
+
+-- Disables LSP semantic highlights globally
+
 function treesitter_setup()
 	require("nvim-treesitter.configs").setup({
 		ensure_installed = { "c", "cpp", "lua", "vim", "vimdoc", "query", "markdown", "markdown_inline", "java" },
@@ -323,18 +246,20 @@ function treesitter_setup()
 		indent = {
 			enable = false,
 		},
+		incremental_selection = {
+			enable = true,
+			keymaps = {
+				init_selection = "<A-o>",
+				node_incremental = "<A-o>",
+				scope_incremental = "<A-O>",
+				node_decremental = "<A-i>",
+			},
+		},
 	})
 
 	require("treesitter-context").setup({
 		max_lines = 1,
 	})
-
-	local function setBG(group, bg_color)
-		local current_hl = vim.api.nvim_get_hl_by_name(group, true)
-		local fg_color = current_hl.foreground or "NONE"
-		vim.api.nvim_set_hl(0, group, { fg = fg_color, bg = bg_color })
-	end
-	setBG("TreesitterContextBottom", "#203034")
 
 	vim.keymap.set("n", "<C-[>", function()
 		require("treesitter-context").go_to_context(vim.v.count1)
@@ -410,21 +335,16 @@ function autotag_setup()
 end
 
 -------------------------------------------surround setup--------------------------------------------
+
 function surround_setup()
 	require("nvim-surround").setup({
 		move_cursor = false,
-		keymaps = {
-			normal = "ys",
-			normal_cur = "yss",
-			normal_line = "yS",
-			normal_cur_line = "ySS",
-			visual = "s",
-			visual_line = "gs",
-			delete = "ds",
-			change = "cs",
-			change_line = "cS",
-		},
+		nvim_surround_no_mapping = true,
 	})
+	vim.keymap.set("n", "sa", "<Plug>(nvim-surround-normal)", {})
+	vim.keymap.set("n", "sd", "<Plug>(nvim-surround-delete)", {})
+	vim.keymap.set("n", "sr", "<Plug>(nvim-surround-change)", {})
+	vim.keymap.set("x", "S", "<Plug>(nvim-surround-visual)", {})
 end
 
 -------------------------------------------file manager setup--------------------------------------------

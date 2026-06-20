@@ -60,13 +60,28 @@ function lsp_setup_config()
 	vim.lsp.config("bashls", {
 		cmd = { "bash-language-server", "start" },
 		filetypes = { "bash", "sh", "zsh" },
-		-- root_dir = root_dir_func({ ".git" }),
 	})
+
+	-- c#
+	vim.lsp.config("csharp-lsp", {
+		cmd = { "csharp-ls" },
+		settings = {
+			useMetadataUris = true,
+			analyzersEnabled = true,
+			applyFormattingOptions = true,
+		},
+		root_markers = {
+			"*.csproj",
+			".git",
+		},
+	})
+	require("csharpls_extended").buf_read_cmd_bind()
 
 	-- go
 	vim.lsp.config("gopls", {})
 
 	local ls_to_setup = {
+		"csharp-lsp",
 		"pyright",
 		"clangd",
 		"lua_ls",
@@ -144,7 +159,7 @@ function lsp_setup_config()
 			-- ga (gives char hex and octal)
 
 			-- open buffer in side bar and goto
-			vim.keymap.set("n", "<C-w>k", open, opts)
+			vim.keymap.set("n", "<C-w>K", open, opts)
 
 			-- code actions
 			vim.keymap.set("n", "ge", vim.lsp.buf.code_action, {})
@@ -163,9 +178,7 @@ function lsp_setup_config()
 		end,
 	})
 
-	vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
-		border = "rounded",
-	})
+	vim.lsp.buf.hover({ border = "rounded" })
 
 	vim.diagnostic.config({
 		virtual_text = false,

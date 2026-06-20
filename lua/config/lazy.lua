@@ -24,6 +24,7 @@ require("config.git")
 require("config.search")
 require("config.lsp_config")
 require("config.conform")
+require("config.suggest")
 
 -- Setup lazy.nvim
 require("lazy").setup({
@@ -34,8 +35,10 @@ require("lazy").setup({
 		{ "NLKNguyen/papercolor-theme" },
 		{ "Mofiqul/vscode.nvim" },
 
+		-- rainbow coded params etc
 		{ "hiphish/rainbow-delimiters.nvim", event = "BufReadPost", config = rainbow_setup },
 
+		-- toggle bool
 		{ "nat-418/boole.nvim", event = "BufReadPost", config = bool_setup },
 
 		{
@@ -90,6 +93,7 @@ require("lazy").setup({
 			event = "BufReadPre",
 			dependencies = {
 				"williamboman/mason.nvim",
+				"Decodetalkers/csharpls-extended-lsp.nvim",
 			},
 			config = lsp_setup_config,
 		},
@@ -100,7 +104,7 @@ require("lazy").setup({
 		-- completion
 		{
 			"hrsh7th/nvim-cmp",
-			event = "InsertEnter",
+			event = "BufReadPost",
 			dependencies = {
 				"hrsh7th/cmp-nvim-lsp",
 				"saadparwaiz1/cmp_luasnip",
@@ -108,6 +112,7 @@ require("lazy").setup({
 				"rafamadriz/friendly-snippets",
 				"ray-x/lsp_signature.nvim",
 				"nvim-highlight-colors",
+				"github/copilot.vim",
 			},
 			config = suggestion_setup,
 		},
@@ -155,7 +160,7 @@ require("lazy").setup({
 				"MunifTanjim/nui.nvim",
 			},
 			lazy = "leetcode.nvim" ~= vim.fn.argv(0, -1),
-			opts = { arg = "leetcode.nvim", lang = "rust" },
+			opts = { arg = "leetcode.nvim", lang = "python3" },
 			init = cpp_setup,
 		},
 

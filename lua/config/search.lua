@@ -42,6 +42,8 @@ function telescope_setup()
 
 	vim.keymap.set("n", ";g", builtin.live_grep)
 
+	require("telescope").load_extension("csharpls_definition")
+
 	-------------------------------------------------------------- trouble / todo
 
 	vim.keymap.set("n", ";c", function()
@@ -63,6 +65,9 @@ function telescope_setup()
 
 	require("todo-comments").setup({
 		signs = false,
+		highlight = {
+			multiline = false,
+		},
 	})
 
 	vim.keymap.set("n", "]t", function()

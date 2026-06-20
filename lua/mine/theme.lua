@@ -37,13 +37,21 @@ function lualine_setup()
 end
 
 --------------------------------- overrides ---------------------------------
+local function hl_exists(group)
+	return pcall(vim.api.nvim_get_hl, 0, { name = group })
+end
+
 local function setBG(group, bg_color)
+	if not hl_exists(group) then
+		return
+	end
 	local current_hl = vim.api.nvim_get_hl_by_name(group, true)
 	local fg_color = current_hl.foreground or "NONE"
 	vim.api.nvim_set_hl(0, group, { fg = fg_color, bg = bg_color })
 end
 
 local function dark()
+	setBG("TreesitterContextBottom", "#203034")
 	vim.api.nvim_set_hl(0, "Visual", { bg = "#335E5E", blend = 80 })
 	vim.api.nvim_set_hl(0, "VisualNOS", { bg = "#335E5E", blend = 80 })
 
@@ -59,9 +67,9 @@ local function dark()
 	-- local col = "#6A737D"
 	-- local col = "#5C6370"
 
-	vim.api.nvim_set_hl(0, "@comment", { bg = nil, fg = col })
+	vim.api.nvim_set_hl(0, "Comment", { bg = nil, fg = col })
 	-- vim.api.nvim_set_hl(0, "MatchParen", { fg = "#FFD700", bg = "#282a36", bold = true })
-	vim.api.nvim_set_hl(0, "MatchParen", { fg = "#FFFFFF", bg = "#282a36", bold = true })
+	vim.api.nvim_set_hl(0, "MatchParen", { fg = "#CC241D", bg = "#282a36", bold = true })
 
 	vim.api.nvim_set_hl(0, "Identifier", { fg = "#999999" })
 
@@ -69,25 +77,30 @@ local function dark()
 end
 
 local function light()
+	setBG("TreesitterContextBottom", "#dce0e8")
 	vim.api.nvim_set_hl(0, "MatchParen", {
 		fg = "#FFFFFF",
 		bg = "#FFD700",
 		bold = true,
 	})
 
-	local normal = "#F2EEDE"
-	setBG("Normal", normal)
+	-- local normal = "#F2EEDE"
+	local normal = "#eff1f5"
+	vim.api.nvim_set_hl(0, "Normal", { fg = "#000000", bg = "#eff1f5", blend = 80 })
 
 	vim.api.nvim_set_hl(0, "Visual", { bg = "#D0D0D0", blend = 30 })
 	vim.api.nvim_set_hl(0, "VisualNOS", { bg = "#D0D0D0", blend = 30 })
 
-	local line = "#FFF4D6"
+	-- local line = "#FFF4D6"
+	local line = "#e6e9ef"
 	setBG("CursorLine", line)
 	setBG("CursorLineNr", line)
 
 	-- set comment
-	local col = "#D2691E"
-	vim.api.nvim_set_hl(0, "@comment", { bg = nil, fg = col })
+	-- local col = "#D2691E"
+	local col = "#34C22C"
+	-- local col = "#6A9955"
+	vim.api.nvim_set_hl(0, "Comment", { bg = nil, fg = col })
 
 	-- member vars etc
 	vim.api.nvim_set_hl(0, "Identifier", { fg = "#777777" })
@@ -98,6 +111,34 @@ local function light()
 	vim.api.nvim_set_hl(0, "@lsp.typemod.variable.defaultLibrary", { fg = "#CC52A3" })
 end
 
+local function clean_groups()
+	for _, group in ipairs(vim.fn.getcompletion("", "highlight")) do
+		local hl = vim.api.nvim_get_hl_by_name(group, true)
+		if hl then
+			-- no decoration
+			hl.italic = nil
+			hl.bold = nil
+			hl.underline = nil
+
+			vim.api.nvim_set_hl(0, group, hl)
+		end
+	end
+end
+local function link_groups(match, other)
+	vim.api.nvim_create_autocmd("ColorScheme", {
+		callback = function()
+			for _, group in ipairs(vim.fn.getcompletion(match, "highlight")) do
+				vim.api.nvim_set_hl(0, group, { link = other })
+			end
+		end,
+	})
+end
+
+local function link_treesitter_groups()
+	link_groups("@variable", "Normal")
+	link_groups("@comment", "Comment")
+end
+
 function adjust_colors()
 	if vim.o.background == "dark" then
 		dark()
@@ -105,7 +146,9 @@ function adjust_colors()
 		light()
 	end
 
+	clean_groups()
 	lualine_setup()
+	link_treesitter_groups()
 
 	local normal_fg = vim.api.nvim_get_hl_by_name("Normal", true).foreground
 	vim.api.nvim_set_hl(0, "Function", { fg = normal_fg })
@@ -125,18 +168,21 @@ function adjust_colors()
 
 	-- set cursor to default terminal
 	vim.cmd("highlight Cursor guifg=NONE guibg=NONE")
-
-	-- Remove italic, bold, underlinefrom all highlight groups
-	for _, group in ipairs(vim.fn.getcompletion("", "highlight")) do
-		local highlight = vim.api.nvim_get_hl_by_name(group, true)
-		if highlight then
-			highlight.italic = nil
-			highlight.bold = nil
-			highlight.underline = nil
-			vim.api.nvim_set_hl(0, group, highlight)
-		end
-	end
 end
+
+vim.api.nvim_create_autocmd("LspAttach", {
+	callback = function(args)
+		local client = vim.lsp.get_client_by_id(args.data.client_id)
+		client.server_capabilities.semanticTokensProvider = nil
+		link_treesitter_groups()
+	end,
+})
+
+vim.api.nvim_create_autocmd({ "FileType", "BufWinEnter" }, {
+	callback = function(args)
+		link_treesitter_groups()
+	end,
+})
 
 vim.api.nvim_create_autocmd("colorscheme", {
 	pattern = "*",
@@ -146,10 +192,10 @@ vim.api.nvim_create_autocmd("colorscheme", {
 vim.keymap.set("n", "<leader>=", function()
 	if vim.o.background == "dark" then
 		vim.o.background = "light"
-		vim.cmd.colorscheme("paper")
+		vim.cmd.colorscheme("vscode")
 	else
 		vim.o.background = "dark"
-		vim.cmd.colorscheme("phoenix")
+		vim.cmd.colorscheme("vscode")
 	end
 end)
 
@@ -158,4 +204,5 @@ vim.keymap.set("n", "<leader>+", function()
 	print(vim.inspect(result))
 end, { noremap = true, silent = false })
 
-vim.cmd.colorscheme("phoenix")
+vim.o.background = "light"
+vim.cmd.colorscheme("vscode")
