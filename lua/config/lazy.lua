@@ -103,7 +103,6 @@ require("lazy").setup({
 				"L3MON4D3/LuaSnip",
 				"rafamadriz/friendly-snippets",
 				"ray-x/lsp_signature.nvim",
-				"nvim-highlight-colors",
 				"github/copilot.vim",
 			},
 			config = suggestion_setup,

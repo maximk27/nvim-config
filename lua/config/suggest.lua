@@ -41,9 +41,6 @@ function suggestion_setup()
 
 	cmp.setup({
 		preselect = cmp.PreselectMode.None,
-		formatting = {
-			format = require("nvim-highlight-colors").format,
-		},
 		snippet = {
 			expand = function(args)
 				ls.lsp_expand(args.body)
