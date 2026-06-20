@@ -112,6 +112,7 @@ require("lazy").setup({
 		-- treesitter
 		{
 			"nvim-treesitter/nvim-treesitter",
+			branch = "main",
 			build = ":TSUpdate",
 			event = "BufreadPre",
 			dependencies = { "nvim-treesitter/nvim-treesitter-context" },

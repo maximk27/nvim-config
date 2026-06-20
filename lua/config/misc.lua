@@ -217,28 +217,28 @@ vim.keymap.set("n", ";v", ":Spectre<CR>")
 
 -------------------------------------------tree-sitter setup--------------------------------------------
 
--- Disables LSP semantic highlights globally
-
 function treesitter_setup()
-	require("nvim-treesitter.configs").setup({
-		ensure_installed = { "c", "cpp", "lua", "vim", "vimdoc", "query", "markdown", "markdown_inline", "java" },
-		sync_install = false,
-		auto_install = true,
-		highlight = {
-			enable = true,
-		},
-		indent = {
-			enable = false,
-		},
-		incremental_selection = {
-			enable = true,
-			keymaps = {
-				init_selection = "<A-o>",
-				node_incremental = "<A-o>",
-				scope_incremental = "<A-O>",
-				node_decremental = "<A-i>",
-			},
-		},
+	require("nvim-treesitter").setup({
+		install_dir = vim.fn.stdpath("data") .. "/site",
+	})
+	require("nvim-treesitter").install({
+		"c",
+		"cpp",
+		"java",
+		"rust",
+		"python",
+		"lua",
+		"vim",
+		"vimdoc",
+		"query",
+		"markdown",
+		"markdown_inline",
+	})
+
+	vim.api.nvim_create_autocmd("FileType", {
+		callback = function()
+			pcall(vim.treesitter.start)
+		end,
 	})
 
 	require("treesitter-context").setup({

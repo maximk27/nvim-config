@@ -123,6 +123,7 @@ local function clean_groups()
 		end
 	end
 end
+
 local function link_groups(match, other)
 	vim.api.nvim_create_autocmd("ColorScheme", {
 		callback = function()
@@ -173,18 +174,10 @@ vim.api.nvim_create_autocmd("LspAttach", {
 	callback = function(args)
 		local client = vim.lsp.get_client_by_id(args.data.client_id)
 		client.server_capabilities.semanticTokensProvider = nil
-		link_treesitter_groups()
-	end,
-})
-
-vim.api.nvim_create_autocmd({ "FileType", "BufWinEnter" }, {
-	callback = function(args)
-		link_treesitter_groups()
 	end,
 })
 
 vim.api.nvim_create_autocmd("colorscheme", {
-	pattern = "*",
 	callback = adjust_colors,
 })
 
@@ -197,11 +190,6 @@ vim.keymap.set("n", "<leader>=", function()
 		vim.cmd.colorscheme("vscode")
 	end
 end)
-
-vim.keymap.set("n", "<leader>+", function()
-	local result = vim.treesitter.get_captures_at_cursor(0)
-	print(vim.inspect(result))
-end, { noremap = true, silent = false })
 
 vim.o.background = "light"
 vim.cmd.colorscheme("vscode")
