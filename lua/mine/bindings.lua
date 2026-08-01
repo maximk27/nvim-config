@@ -23,11 +23,7 @@ vim.keymap.set("n", "<M-j>", "5j", { noremap = true, silent = true })
 vim.keymap.set("v", "<M-k>", "5k", { noremap = true, silent = true })
 vim.keymap.set("v", "<M-j>", "5j", { noremap = true, silent = true })
 
-vim.keymap.set("n", "<C-e>", "2<C-e>2j", { noremap = true, silent = true })
-vim.keymap.set("v", "<C-e>", "2<C-e>2j", { noremap = true, silent = true })
-
-vim.keymap.set("n", "<C-y>", "2<C-y>2k", { noremap = true, silent = true })
-vim.keymap.set("v", "<C-y>", "2<C-y>2k", { noremap = true, silent = true })
+vim.keymap.set({ "n", "x" }, "<C-e>", "H", { silent = true })
 
 --insert edit
 vim.keymap.set("i", "<C-f>", "<Right>", { noremap = true, silent = true })
@@ -64,8 +60,8 @@ vim.keymap.set("n", "<M-C>", '"_C', { noremap = true, silent = true })
 vim.keymap.set("n", "<M-D>", '"_D', { noremap = true, silent = true })
 
 -- scrolling
-vim.keymap.set("n", "<C-u>", "10<C-y>")
-vim.keymap.set("n", "<C-d>", "10<C-e>")
+vim.keymap.set("n", "<C-u>", "10<C-y>", { noremap = true, silent = true })
+vim.keymap.set("n", "<C-d>", "10<C-e>", { noremap = true, silent = true })
 
 -- window
 vim.keymap.set("n", "<M-K>", ":resize +5<CR>")
