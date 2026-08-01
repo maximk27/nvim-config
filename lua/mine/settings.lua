@@ -3,7 +3,11 @@ vim.o.hlsearch = true
 vim.o.incsearch = true
 vim.o.clipboard = "unnamedplus"
 vim.o.number = false
+
 vim.o.scrolloff = 8
+-- vim.o.scrolloff = 0
+-- vim.opt.scrolljump = -50
+
 vim.o.guifont = "Input Mono 13"
 vim.o.swapfile = false
 vim.o.termguicolors = true

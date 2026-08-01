@@ -1,10 +1,14 @@
 vim.keymap.set("v", "gj", function()
-	vim.cmd([[execute "normal! \<ESC>"]])
-	local top = vim.fn.getpos("'<")[2]
-	local bottom = vim.fn.getpos("'>")[2]
-	vim.fn.append(top - 1, "\t// clang-format off")
-	vim.fn.append(bottom + 1, "\t// clang-format on")
-end)
+	vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Esc>", true, false, true), "n", false)
+	vim.schedule(function()
+		local start_line = vim.api.nvim_buf_get_mark(0, "<")[1]
+		local end_line = vim.api.nvim_buf_get_mark(0, ">")[1]
+		local line_content = vim.api.nvim_buf_get_lines(0, start_line - 1, start_line, false)[1] or ""
+		local indent = line_content:match("^%s*") or ""
+		vim.api.nvim_buf_set_lines(0, end_line, end_line, false, { indent .. "// clang-format on" })
+		vim.api.nvim_buf_set_lines(0, start_line - 1, start_line - 1, false, { indent .. "// clang-format off" })
+	end)
+end, { desc = "Wrap visual selection in clang-format off/on" })
 
 -- toggle line nums
 vim.keymap.set("n", "<leader>l", function()
