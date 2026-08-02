@@ -61,6 +61,9 @@ require("solarized").setup({
 			["@variable.parameter"] = { fg = colors.base0, italic = false },
 			["@lsp.type.parameter"] = { fg = colors.base0, italic = false },
 
+			Search = { bg = colors.yellow, fg = colors.base03, bold = true },
+			IncSearch = { bg = colors.orange, fg = colors.base03, bold = true },
+
 			DiffAdd = { bg = blend(colors.green, colors.base3, 0.25), fg = colors.base00 },
 			DiffDelete = { bg = blend(colors.red, colors.base3, 0.25), fg = colors.base1, strikethrough = false },
 			DiffChange = { bg = blend(colors.yellow, colors.base3, 0.20), fg = colors.base00 },
