@@ -72,5 +72,31 @@ require("solarized").setup({
 	end,
 })
 
+local function minimal_vscode_light()
+	require("vscode").setup({
+		style = "light",
+		transparent = false,
+	})
+	require("vscode").load()
+
+	vim.opt.background = "light"
+
+	for _, group in ipairs(vim.fn.getcompletion("@lsp", "highlight")) do
+		vim.api.nvim_set_hl(0, group, {})
+	end
+
+	vim.api.nvim_create_autocmd("FileType", {
+		pattern = "*",
+		callback = function(args)
+			-- Stop treesitter highlighting if running on the active buffer
+			pcall(vim.treesitter.stop, args.buf)
+		end,
+	})
+
+	pcall(vim.treesitter.stop, 0)
+end
+
+vim.api.nvim_create_user_command("Minimal", minimal_vscode_light, {})
+
 vim.o.background = "light"
 vim.cmd.colorscheme("solarized")
