@@ -52,49 +52,6 @@ vim.g.rainbow_delimiters = {
 
 function rainbow_setup() end
 
----------------------------------- bool ----------------------------------
-function bool_setup()
-	local letters = {
-		"a",
-		"b",
-		"c",
-		"d",
-		"e",
-		"f",
-		"g",
-		"h",
-		"i",
-		"j",
-		"k",
-		"l",
-		"m",
-		"n",
-		"o",
-		"p",
-		"q",
-		"r",
-		"s",
-		"t",
-		"u",
-		"v",
-		"w",
-		"x",
-		"y",
-		"z",
-	}
-
-	require("boole").setup({
-		mappings = {
-			increment = "<C-a>",
-			decrement = "<C-x>",
-		},
-		additions = {
-			{ "prev", "curr", "next" },
-			letters,
-		},
-	})
-end
-
 --------------------------------- treesj ---------------------------------
 
 function treejs_setup()

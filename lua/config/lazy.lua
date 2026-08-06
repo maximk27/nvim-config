@@ -48,9 +48,6 @@ require("lazy").setup({
 		-- rainbow coded params etc
 		{ "hiphish/rainbow-delimiters.nvim", event = "BufReadPost", config = rainbow_setup },
 
-		-- toggle bool
-		{ "nat-418/boole.nvim", event = "BufReadPost", config = bool_setup },
-
 		{
 			"Wansmer/treesj",
 			keys = { "<C-h>", "<C-H>" },
