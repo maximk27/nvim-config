@@ -10,6 +10,12 @@ vim.keymap.set("n", ";q", ":q")
 vim.keymap.set("n", "v", "V", { noremap = true })
 vim.keymap.set("n", "V", "v", { noremap = true })
 
+-- for mouse copy and paste easy
+vim.keymap.set("v", "<C-a>", "y", { noremap = true })
+vim.keymap.set("n", "<C-a>", function()
+	vim.fn.append(vim.fn.line(".") - 1, "")
+end, { desc = "Insert blank line above" })
+
 -- reset
 vim.keymap.set("n", "_", ":e!<CR>", { noremap = true, silent = true })
 -- vim.keymap.set("n", "+", "za", { desc = "Toggle fold" })
