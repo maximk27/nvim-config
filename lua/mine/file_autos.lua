@@ -19,6 +19,7 @@ vim.api.nvim_create_autocmd("FileType", {
 		vim.opt_local.cindent = true
 		vim.opt_local.cinoptions = "l1,(s"
 		vim.opt_local.cinwords = "if,else,switch,case,for,while,do"
+		vim.opt_local.formatoptions:remove({ "c", "r", "o" })
 	end,
 })
 
