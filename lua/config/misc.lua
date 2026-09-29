@@ -231,10 +231,10 @@ end
 function comment_setup()
 	require("Comment").setup({
 		toggler = {
-			block = "<C-s>",
+			line = "<C-s>",
 		},
 		opleader = {
-			block = "<C-s>",
+			line = "<C-s>",
 		},
 	})
 end
