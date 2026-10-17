@@ -45,11 +45,11 @@ end)
 
 vim.opt.fillchars:append({ diff = "·" })
 
--- lite / fresh machines won't have solarized
+-- lite / fresh machines won't have solarized: fall back to the built-in default
 local has_solarized, solarized = pcall(require, "solarized")
 if not has_solarized then
 	vim.o.background = "light"
-	vim.cmd.colorscheme(vim.fn.has("nvim-0.10") == 1 and "default" or "lunaperche")
+	vim.cmd.colorscheme("default")
 	return
 end
 
@@ -81,37 +81,6 @@ solarized.setup({
 		}
 	end,
 })
-
-local function minimal_vscode_light()
-	local ok, vscode = pcall(require, "vscode")
-	if not ok then
-		vim.notify("Minimal: vscode.nvim not installed", vim.log.levels.WARN)
-		return
-	end
-	vscode.setup({
-		style = "light",
-		transparent = false,
-	})
-	vscode.load()
-
-	vim.opt.background = "light"
-
-	for _, group in ipairs(vim.fn.getcompletion("@lsp", "highlight")) do
-		vim.api.nvim_set_hl(0, group, {})
-	end
-
-	vim.api.nvim_create_autocmd("FileType", {
-		pattern = "*",
-		callback = function(args)
-			-- Stop treesitter highlighting if running on the active buffer
-			pcall(vim.treesitter.stop, args.buf)
-		end,
-	})
-
-	pcall(vim.treesitter.stop, 0)
-end
-
-vim.api.nvim_create_user_command("Minimal", minimal_vscode_light, {})
 
 vim.o.background = "light"
 vim.cmd.colorscheme("solarized")
