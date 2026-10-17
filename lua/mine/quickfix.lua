@@ -1,5 +1,5 @@
 -- quick fix better defaults
-function deleteItemsQF()
+local function deleteItemsQF()
 	local items = vim.fn.getqflist()
 	local line = vim.fn.line(".")
 	table.remove(items, line)

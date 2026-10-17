@@ -1,4 +1,4 @@
-function git_setup()
+local function config()
 	local function has_conflict()
 		return vim.fn.search([[^\(<<<<<<<\|=======\|>>>>>>>\)]], "nw") > 0
 	end
@@ -101,7 +101,7 @@ function git_setup()
 
 	vim.opt.diffopt:append("vertical")
 
-	function exists_file_type(filetype)
+	local function exists_file_type(filetype)
 		local exists = false
 
 		for _, buf in ipairs(vim.api.nvim_list_bufs()) do
@@ -118,7 +118,7 @@ function git_setup()
 	end
 
 	-- toggle open
-	function toggle(func)
+	local function toggle(func)
 		if exists_file_type("DiffviewFileHistory") or exists_file_type("DiffviewFiles") then
 			vim.cmd("DiffviewClose")
 		elseif vim.b.jj_diff_conflicts_running then
@@ -158,3 +158,14 @@ function git_setup()
 		end,
 	})
 end
+
+return {
+	"lewis6991/gitsigns.nvim",
+	event = "VeryLazy",
+	dependencies = {
+		"rafikdraoui/jj-diffconflicts",
+		"nvim-lua/plenary.nvim",
+		"sindrets/diffview.nvim",
+	},
+	config = config,
+}

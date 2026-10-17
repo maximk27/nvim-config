@@ -38,3 +38,7 @@ vim.keymap.set("n", "<C-d>", "10<C-e>", { noremap = true, silent = true })
 -- window
 vim.keymap.set("n", "<Left>", "<C-w>h")
 vim.keymap.set("n", "<Right>", "<C-w>l")
+
+-- global marks
+vim.keymap.set("n", "mm", "mM")
+vim.keymap.set("n", "''", "'M")

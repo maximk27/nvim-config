@@ -1,36 +1,10 @@
-function lsp_setup_config()
+local function config()
 	require("mason").setup({})
 
 	-- before any server is enabled, so the first client gets cmp capabilities
 	vim.lsp.config("*", {
 		capabilities = require("cmp_nvim_lsp").default_capabilities(),
 		root_markers = { ".git" },
-	})
-
-	vim.keymap.set("n", ";c", "<cmd>Trouble diagnostics toggle filter.buf=0<cr>")
-	vim.keymap.set("n", ";C", "<cmd>Trouble diagnostics toggle<cr>")
-
-	require("trouble").setup({
-		win = {
-			size = 5,
-		},
-		update_in_insert = true,
-		warn_no_results = false,
-		auto_close = true,
-		open_no_results = false,
-		focus = true,
-		modes = {
-			diagnostics = {
-				position = "bottom",
-				height = 10,
-				filter = {
-					severity = {
-						min = vim.diagnostic.severity.ERROR,
-						max = vim.diagnostic.severity.ERROR,
-					},
-				},
-			},
-		},
 	})
 
 	-- python
@@ -112,7 +86,7 @@ function lsp_setup_config()
 
 	vim.lsp.log.set_level("WARN")
 
-	function hoverLook()
+	local function hoverLook()
 		vim.lsp.buf.hover({
 			border = { "╭", "─", "╮", "│", "╯", "─", "╰", "│" },
 		})
@@ -205,3 +179,47 @@ function lsp_setup_config()
 		float = { border = "rounded" },
 	})
 end
+
+return {
+	{
+		"neovim/nvim-lspconfig",
+		event = "BufReadPre",
+		dependencies = {
+			"williamboman/mason.nvim",
+			"hrsh7th/cmp-nvim-lsp",
+			"Decodetalkers/csharpls-extended-lsp.nvim",
+		},
+		config = config,
+	},
+
+	{
+		"folke/trouble.nvim",
+		cmd = "Trouble",
+		keys = {
+			{ ";c", "<cmd>Trouble diagnostics toggle filter.buf=0<cr>" },
+			{ ";C", "<cmd>Trouble diagnostics toggle<cr>" },
+		},
+		opts = {
+			win = {
+				size = 5,
+			},
+			update_in_insert = true,
+			warn_no_results = false,
+			auto_close = true,
+			open_no_results = false,
+			focus = true,
+			modes = {
+				diagnostics = {
+					position = "bottom",
+					height = 10,
+					filter = {
+						severity = {
+							min = vim.diagnostic.severity.ERROR,
+							max = vim.diagnostic.severity.ERROR,
+						},
+					},
+				},
+			},
+		},
+	},
+}

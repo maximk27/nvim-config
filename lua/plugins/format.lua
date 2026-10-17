@@ -1,4 +1,4 @@
-function conform_setup()
+local function config()
 	local conform = require("conform")
 	conform.setup({
 		formatters_by_ft = {
@@ -25,3 +25,5 @@ function conform_setup()
 	vim.api.nvim_set_keymap("n", "==", "gqq", { noremap = true, silent = true })
 	vim.api.nvim_set_keymap("v", "=", "gq", { noremap = true, silent = true })
 end
+
+return { "stevearc/conform.nvim", event = "BufWritePre", config = config }

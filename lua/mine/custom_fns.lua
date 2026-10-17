@@ -42,7 +42,7 @@ vim.keymap.set("n", "<leader>-", function()
 	vim.api.nvim_buf_set_lines(0, row - 1, row, false, lines)
 end)
 
-function use_path(path)
+local function use_path(path)
 	-- just to make it work with oil virtual paths
 	local bad_prefix = "oil://"
 	if string.sub(path, 0, #bad_prefix) == bad_prefix then

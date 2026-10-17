@@ -101,7 +101,7 @@ local function navigation_setup()
 	end)
 
 	-- from harpoon
-	function create_item(name)
+	local function create_item(name)
 		local bufnr = vim.fn.bufnr(name, false)
 
 		local pos = { 1, 0 }
@@ -170,7 +170,7 @@ local function preview_setup()
 	end)
 end
 ---------------------------------- config ----------------------------------
-function harpoon_setup()
+local function config()
 	local harpoon = require("harpoon")
 	harpoon:setup()
 
@@ -178,6 +178,10 @@ function harpoon_setup()
 	preview_setup()
 end
 
--- just cuz
-vim.keymap.set("n", "mm", "mM")
-vim.keymap.set("n", "''", "'M")
+return {
+	"ThePrimeagen/harpoon",
+	branch = "harpoon2",
+	dependencies = { "nvim-lua/plenary.nvim" },
+	event = "VeryLazy",
+	config = config,
+}
