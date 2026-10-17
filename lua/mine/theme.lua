@@ -45,11 +45,13 @@ end)
 
 vim.opt.fillchars:append({ diff = "·" })
 
--- lite / fresh machines won't have solarized: fall back to the built-in default
+-- lite / fresh machines won't have solarized: use the export in colors/, else the built-in default
 local has_solarized, solarized = pcall(require, "solarized")
 if not has_solarized then
 	vim.o.background = "light"
-	vim.cmd.colorscheme("default")
+	if not pcall(vim.cmd.colorscheme, "solarized-autumn") then
+		vim.cmd.colorscheme("default")
+	end
 	return
 end
 

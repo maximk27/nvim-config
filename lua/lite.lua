@@ -100,6 +100,8 @@ local servers = {
 	{ cmd = { "rust-analyzer" }, filetypes = { "rust" }, markers = { "Cargo.toml" } },
 	{ cmd = { "gopls" }, filetypes = { "go" }, markers = { "go.mod" } },
 	{ cmd = { "bash-language-server", "start" }, filetypes = { "sh", "bash", "zsh" }, markers = {} },
+	-- lint, format, go to definition (no completion); single static binary
+	{ cmd = { "verible-verilog-ls" }, filetypes = { "verilog", "systemverilog" }, markers = { "verible.filelist" } },
 }
 
 for _, server in ipairs(servers) do
@@ -117,25 +119,4 @@ for _, server in ipairs(servers) do
 			end,
 		})
 	end
-end
-
--- completion: native popup on 0.11+, omnifunc (<C-x><C-o>) before that
-if has("0.11") then
-	vim.opt.completeopt = { "menuone", "noselect", "popup" }
-	vim.api.nvim_create_autocmd("LspAttach", {
-		callback = function(args)
-			local client = vim.lsp.get_client_by_id(args.data.client_id)
-			if client and client:supports_method("textDocument/completion") then
-				vim.lsp.completion.enable(true, client.id, args.buf, { autotrigger = true })
-			end
-		end,
-	})
-
-	-- <Tab> accepts like cmp, <C-Space> opens it
-	vim.keymap.set("i", "<Tab>", function()
-		return vim.fn.pumvisible() == 1 and "<C-y>" or "<Tab>"
-	end, { expr = true })
-	vim.keymap.set("i", "<C-Space>", function()
-		vim.lsp.completion.get()
-	end)
 end
