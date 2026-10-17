@@ -133,7 +133,7 @@ local function navigation_setup()
 			return
 		end
 
-		item = create_item(path)
+		local item = create_item(path)
 
 		harpoon:list():replace_at(idx, item)
 

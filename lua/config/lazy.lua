@@ -31,9 +31,6 @@ require("config.ufo")
 require("lazy").setup({
 	spec = {
 		-- themes
-		{ "widatama/vim-phoenix" },
-		{ "yorickpeterse/vim-paper" },
-		{ "NLKNguyen/papercolor-theme" },
 		{ "Mofiqul/vscode.nvim" },
 		{ "maxmx03/solarized.nvim" },
 
@@ -55,7 +52,7 @@ require("lazy").setup({
 			config = ufo_setup,
 		},
 		-- rainbow coded params etc
-		{ "hiphish/rainbow-delimiters.nvim", event = "BufReadPost", config = rainbow_setup },
+		{ "hiphish/rainbow-delimiters.nvim", event = "BufReadPost" },
 
 		{
 			"Wansmer/treesj",
@@ -100,13 +97,14 @@ require("lazy").setup({
 			event = "BufReadPre",
 			dependencies = {
 				"williamboman/mason.nvim",
+				"hrsh7th/cmp-nvim-lsp",
 				"Decodetalkers/csharpls-extended-lsp.nvim",
 			},
 			config = lsp_setup_config,
 		},
 
 		-- formatter
-		{ "stevearc/conform.nvim", event = "BufWritePre", opts = {}, config = conform_setup },
+		{ "stevearc/conform.nvim", event = "BufWritePre", config = conform_setup },
 
 		-- completion
 		{
@@ -134,7 +132,7 @@ require("lazy").setup({
 		},
 
 		-- comment
-		{ "numToStr/Comment.nvim", event = "VeryLazy", opts = {}, config = comment_setup },
+		{ "numToStr/Comment.nvim", event = "VeryLazy", config = comment_setup },
 
 		-- search
 		{
@@ -144,7 +142,6 @@ require("lazy").setup({
 				"nvim-lua/plenary.nvim",
 				"folke/todo-comments.nvim",
 				"folke/trouble.nvim",
-				"mollerhoj/telescope-recent-files.nvim",
 			},
 			event = { "BufReadPre" },
 			cmd = { "Telescope" },

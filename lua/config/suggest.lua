@@ -1,13 +1,5 @@
 -----------------------------------------------suggestion setup--------------------------------------------------
 function suggestion_setup()
-	-- cmp
-	local capabilities = require("cmp_nvim_lsp").default_capabilities()
-
-	vim.lsp.config("*", {
-		capabilities = capabilities,
-		root_markers = { ".git" },
-	})
-
 	local ls = require("luasnip")
 
 	require("luasnip.loaders.from_vscode").lazy_load()

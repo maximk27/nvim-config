@@ -1,6 +1,6 @@
 local function setBG(group, bg_color)
-	local current_hl = vim.api.nvim_get_hl_by_name(group, true)
-	local fg_color = current_hl.foreground or "NONE"
+	local current_hl = vim.api.nvim_get_hl(0, { name = group, link = false })
+	local fg_color = current_hl.fg or "NONE"
 	vim.api.nvim_set_hl(0, group, { fg = fg_color, bg = bg_color })
 end
 
@@ -36,8 +36,6 @@ function telescope_setup()
 	})
 
 	setBG("TelescopeSelection", "#3a3d45")
-	local builtin = require("telescope.builtin")
-	local utils = require("telescope.utils")
 
 	-------------------------------------------------------------- trouble / todo
 
@@ -58,7 +56,6 @@ function telescope_setup()
 end
 
 function telescope_keys()
-	local themes = require("telescope.themes")
 	local opt = {}
 
 	return {

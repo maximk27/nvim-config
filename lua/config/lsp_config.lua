@@ -1,7 +1,11 @@
-vim.g.lsp_disable_default_keymaps = true
-
 function lsp_setup_config()
 	require("mason").setup({})
+
+	-- before any server is enabled, so the first client gets cmp capabilities
+	vim.lsp.config("*", {
+		capabilities = require("cmp_nvim_lsp").default_capabilities(),
+		root_markers = { ".git" },
+	})
 
 	vim.keymap.set("n", ";c", "<cmd>Trouble diagnostics toggle filter.buf=0<cr>")
 	vim.keymap.set("n", ";C", "<cmd>Trouble diagnostics toggle<cr>")
@@ -32,21 +36,6 @@ function lsp_setup_config()
 	-- python
 	vim.lsp.config("pyright", {
 		settings = {
-			["python"] = {
-				analysis = {
-					typeCheckingMode = "basic",
-					autoSearchPaths = true,
-					useLibraryCodeForTypes = true,
-					diagnosticMode = "workspace",
-					extraPaths = { "." },
-					venvPath = ".",
-				},
-			},
-		},
-	})
-
-	vim.lsp.config("pyright", {
-		settings = {
 			python = {
 				analysis = {
 					typeCheckingMode = "basic",
@@ -63,7 +52,7 @@ function lsp_setup_config()
 	vim.lsp.config("protobuf_language_server", {
 		cmd = { "protobuf-language-server" },
 		filetypes = { "proto", "cpp" },
-		root_dir = vim.fs.root(0, { ".jj", ".git" }),
+		root_markers = { ".jj", ".git" },
 		single_file_support = true,
 		settings = {},
 	})
@@ -121,8 +110,7 @@ function lsp_setup_config()
 		vim.lsp.enable(server)
 	end
 
-	-- vim.lsp.set_log_level("off")
-	vim.lsp.set_log_level("WARN")
+	vim.lsp.log.set_level("WARN")
 
 	function hoverLook()
 		vim.lsp.buf.hover({
@@ -188,10 +176,8 @@ function lsp_setup_config()
 			vim.keymap.set("n", "<C-w>K", open, opts)
 
 			-- code actions
-			vim.keymap.set("n", "ge", vim.lsp.buf.code_action, {})
-			vim.keymap.set("v", "ge", function()
-				vim.lsp.buf.code_action({ range = vim.api.nvim_buf_get_extmark_by_id(0, "visual_selection", 0, 0, {}) })
-			end, {})
+			-- uses the visual selection as the range in v mode
+			vim.keymap.set({ "n", "v" }, "ge", vim.lsp.buf.code_action, opts)
 
 			vim.keymap.set("n", "gi", "<cmd>lua vim.lsp.buf.implementation()<cr>", opts)
 			vim.keymap.set("n", "go", "<cmd>lua vim.lsp.buf.type_definition()<cr>", opts)
@@ -199,25 +185,20 @@ function lsp_setup_config()
 			vim.keymap.set("n", ";r", "<cmd>lua vim.lsp.buf.rename()<cr>", opts)
 			-- vim.keymap.set({ "n", "x" }, "<F3>", "<cmd>lua vim.lsp.buf.format({async = true})<cr>", opts)
 			vim.keymap.set("n", "<C-j>", "<cmd>lua vim.diagnostic.open_float()<cr>", opts)
-			vim.keymap.set("n", "[d", "<cmd>lua vim.diagnostic.goto_prev()<cr>", opts)
-			vim.keymap.set("n", "]d", "<cmd>lua vim.diagnostic.goto_next()<cr>", opts)
+			vim.keymap.set("n", "[d", function()
+				vim.diagnostic.jump({ count = -1, float = true })
+			end, opts)
+			vim.keymap.set("n", "]d", function()
+				vim.diagnostic.jump({ count = 1, float = true })
+			end, opts)
 		end,
 	})
-
-	vim.lsp.buf.hover({ border = "rounded" })
 
 	vim.diagnostic.config({
 		virtual_text = false,
 		severity_sort = true,
-		signs = {
-			severity = { min = vim.diagnostic.severity.WARN, max = vim.diagnostic.severity.INFO },
-			text = {
-				[vim.diagnostic.severity.ERROR] = "●",
-				[vim.diagnostic.severity.WARN] = "●",
-				[vim.diagnostic.severity.HINT] = "●",
-				[vim.diagnostic.severity.INFO] = "●",
-			},
-		},
+		-- statusline counts errors via vim.diagnostic.count, which ignores this
+		signs = false,
 		virtual_lines = false,
 		underline = false,
 		update_in_insert = true,

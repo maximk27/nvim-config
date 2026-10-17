@@ -50,8 +50,6 @@ vim.g.rainbow_delimiters = {
 	},
 }
 
-function rainbow_setup() end
-
 --------------------------------- treesj ---------------------------------
 
 function treejs_setup()

@@ -3,3 +3,4 @@ env
 plugin/version482.vim
 lazy-lock.json
 res.txt
+.DS_Store

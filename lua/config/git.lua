@@ -108,7 +108,6 @@ function git_setup()
 			-- loaded and visible
 			if vim.api.nvim_buf_is_loaded(buf) then
 				local type = vim.bo[buf].filetype
-				local res = type == filetype
 				if type == filetype then
 					exists = true
 					break

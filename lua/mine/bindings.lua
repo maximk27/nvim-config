@@ -22,7 +22,6 @@ vim.keymap.set({ "n", "v" }, "<Up>", "5k", { noremap = true, silent = true })
 vim.keymap.set({ "n", "v" }, "<Down>", "5j", { noremap = true, silent = true })
 
 vim.keymap.set({ "i", "c" }, "<A-BS>", "<C-w>", { noremap = true, silent = true })
-vim.keymap.set({ "c", "i" }, "<A-BS>", "<C-w>", { noremap = true, silent = true })
 
 -- pasting non overwrite
 vim.keymap.set({ "n", "v" }, "<M-p>", '"_dP', { noremap = true, silent = true })

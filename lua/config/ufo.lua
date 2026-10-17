@@ -16,7 +16,6 @@ function ufo_setup()
 		mappings = {},
 	})
 
-	vim.keymap.set("n", "+", "za", { desc = "Toggle fold" })
 	vim.keymap.set("n", "zR", require("ufo").openAllFolds)
 	vim.keymap.set("n", "zM", require("ufo").closeAllFolds)
 	vim.keymap.set("n", "zr", require("ufo").openFoldsExceptKinds)
