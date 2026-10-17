@@ -37,6 +37,15 @@ require("lazy").setup({
 		{ "Mofiqul/vscode.nvim" },
 		{ "maxmx03/solarized.nvim" },
 
+		-- lsp time out
+		{
+			"zeioth/garbage-day.nvim",
+			event = "VeryLazy",
+			opts = {
+				grace_period = 60 * 10, -- in s
+			},
+		},
+
 		-- fold
 		{
 			"kevinhwang91/nvim-ufo",
