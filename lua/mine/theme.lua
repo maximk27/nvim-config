@@ -1,6 +1,7 @@
 local function setup_native_statusline()
 	local function get_diagnostics()
-		if not vim.diagnostic.is_enabled() then
+		-- count/is_enabled are 0.10+
+		if not vim.diagnostic.count or not vim.diagnostic.is_enabled() then
 			return ""
 		end
 
@@ -39,11 +40,20 @@ vim.keymap.set("n", "<leader>=", function()
 	else
 		vim.o.background = "dark"
 	end
-	vim.cmd.colorscheme("solarized")
+	vim.cmd.colorscheme(vim.g.colors_name or "default")
 end)
 
 vim.opt.fillchars:append({ diff = "·" })
-require("solarized").setup({
+
+-- lite / fresh machines won't have solarized
+local has_solarized, solarized = pcall(require, "solarized")
+if not has_solarized then
+	vim.o.background = "light"
+	vim.cmd.colorscheme(vim.fn.has("nvim-0.10") == 1 and "default" or "lunaperche")
+	return
+end
+
+solarized.setup({
 	variant = "autumn",
 	styles = {
 		enabled = true,
@@ -73,11 +83,16 @@ require("solarized").setup({
 })
 
 local function minimal_vscode_light()
-	require("vscode").setup({
+	local ok, vscode = pcall(require, "vscode")
+	if not ok then
+		vim.notify("Minimal: vscode.nvim not installed", vim.log.levels.WARN)
+		return
+	end
+	vscode.setup({
 		style = "light",
 		transparent = false,
 	})
-	require("vscode").load()
+	vscode.load()
 
 	vim.opt.background = "light"
 
