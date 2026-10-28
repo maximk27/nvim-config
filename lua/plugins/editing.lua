@@ -6,6 +6,14 @@ local function comment_config()
 		opleader = {
 			line = "<C-s>",
 		},
+		-- nvim 0.12 get_parser returns nil (instead of erroring) when no parser
+		-- exists, which Comment.nvim doesn't handle; fall back to filetype here
+		pre_hook = function(ctx)
+			if vim.treesitter.get_parser(0, nil, { error = false }) then
+				return nil
+			end
+			return require("Comment.ft").get(vim.bo.filetype, ctx.ctype) or vim.bo.commentstring
+		end,
 	})
 end
 
