@@ -68,6 +68,11 @@ local function config()
 	vim.lsp.config("clangd", {})
 	vim.lsp.config("cmake", {})
 
+	-- verilog / systemverilog (binary: `:MasonInstall verible`)
+	vim.lsp.config("verible", {
+		cmd = { "verible-verilog-ls", "--rules_config_search" },
+	})
+
 	local ls_to_setup = {
 		"pyright",
 		"clangd",
@@ -78,6 +83,7 @@ local function config()
 		"bashls",
 		"marksman",
 		"protobuf_language_server",
+		"verible",
 	}
 
 	for _, server in ipairs(ls_to_setup) do

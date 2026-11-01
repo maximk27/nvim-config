@@ -9,6 +9,8 @@ local function config()
 			rust = { "rustfmt" },
 			go = { "gofmt" },
 			bash = { "shfmt" },
+			verilog = { "verible" },
+			systemverilog = { "verible" },
 		},
 		default_format_opts = {
 			lsp_format = "fallback",

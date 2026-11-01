@@ -15,6 +15,7 @@ local function config()
 		"query",
 		"markdown",
 		"markdown_inline",
+		"systemverilog", -- also used for verilog filetype
 	})
 
 	vim.api.nvim_create_autocmd("FileType", {

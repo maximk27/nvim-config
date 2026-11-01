@@ -9,7 +9,13 @@ vim.api.nvim_create_autocmd("FileType", {
 		"typescriptreact",
 		"cmake",
 	},
-	command = "setlocal tabstop=2 shiftwidth=2",
+	command = "setlocal tabstop=2 shiftwidth=2 softtabstop=2",
+})
+
+-- verilog: 2 spaces, no tabs (lowRISC/Google style, matches verible-verilog-format)
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = { "verilog", "systemverilog" },
+	command = "setlocal expandtab tabstop=2 shiftwidth=2 softtabstop=2",
 })
 
 -- indentation
