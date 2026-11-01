@@ -116,6 +116,11 @@ return {
 			win = {
 				size = 5,
 			},
+			filters = {
+				level = function(item)
+					return item.severity <= vim.g.diag_min_severity
+				end,
+			},
 			update_in_insert = true,
 			warn_no_results = false,
 			auto_close = true,
@@ -125,12 +130,8 @@ return {
 				diagnostics = {
 					position = "bottom",
 					height = 10,
-					filter = {
-						severity = {
-							min = vim.diagnostic.severity.ERROR,
-							max = vim.diagnostic.severity.ERROR,
-						},
-					},
+					-- severity cutoff toggled with ;t (see mine/lsp.lua)
+					filter = { level = true },
 				},
 			},
 		},

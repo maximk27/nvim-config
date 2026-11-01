@@ -29,7 +29,6 @@ require("mine.theme")
 require("mine.quickfix")
 require("mine.file_autos")
 require("mine.custom_fns")
-require("mine.terminal")
 require("mine.lsp")
 
 -- no provider (old nvim, no ssh tty): don't error on every yank

@@ -5,14 +5,21 @@ local function setup_native_statusline()
 			return ""
 		end
 
+		local sev = vim.diagnostic.severity
 		local counts = vim.diagnostic.count(0)
-		local err_count = counts[vim.diagnostic.severity.ERROR] or 0
+		local err_count = counts[sev.ERROR] or 0
+		local warn_count = counts[sev.WARN] or 0
+		local parts = {}
 
+		-- warnings only when toggled on with ;t (mine/lsp.lua)
+		if warn_count > 0 and (vim.g.diag_min_severity or sev.ERROR) >= sev.WARN then
+			table.insert(parts, string.format("%%#DiagnosticWarn#█████(%d)%%*", warn_count))
+		end
 		if err_count > 0 then
 			-- Uses native DiagnosticError highlight group from solarized
-			return string.format("%%#DiagnosticError#█████████████(%d)%%*", err_count)
+			table.insert(parts, string.format("%%#DiagnosticError#█████████████(%d)%%*", err_count))
 		end
-		return ""
+		return table.concat(parts, " ")
 	end
 
 	-- Assemble statusline segments dynamically

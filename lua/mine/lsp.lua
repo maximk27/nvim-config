@@ -94,6 +94,19 @@ vim.api.nvim_create_autocmd("LspAttach", {
 	end,
 })
 
+-- which diagnostics the statusline and trouble show: errors only, or errors + warnings
+vim.g.diag_min_severity = vim.g.diag_min_severity or vim.diagnostic.severity.ERROR
+
+vim.keymap.set("n", ";t", function()
+	local sev = vim.diagnostic.severity
+	vim.g.diag_min_severity = vim.g.diag_min_severity == sev.ERROR and sev.WARN or sev.ERROR
+	vim.cmd.redrawstatus({ bang = true })
+	if package.loaded["trouble"] then
+		require("trouble").refresh()
+	end
+	vim.notify(vim.g.diag_min_severity == sev.WARN and "diagnostics: errors + warnings" or "diagnostics: errors only")
+end, { desc = "Toggle showing warnings in statusline/trouble" })
+
 vim.diagnostic.config({
 	virtual_text = false,
 	severity_sort = true,
