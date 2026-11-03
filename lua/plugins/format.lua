@@ -12,14 +12,26 @@ local function config()
 			verilog = { "verible" },
 			systemverilog = { "verible" },
 		},
+		formatters = {
+			-- per-project style from .verible-format (see lua/mine/verible.lua)
+			verible = {
+				prepend_args = function(_, ctx)
+					local file = require("mine.verible").find(ctx.filename)
+					return file and { "--flagfile=" .. file } or {}
+				end,
+			},
+		},
 		default_format_opts = {
 			lsp_format = "fallback",
 		},
-		format_on_save = {
+		format_on_save = function(bufnr)
+			local ft = vim.bo[bufnr].filetype
+			if (ft == "verilog" or ft == "systemverilog") and not require("mine.verible").settings(bufnr).format_on_save then
+				return nil
+			end
 			-- These options will be passed to conform.format()
-			timeout_ms = 500,
-			lsp_format = "fallback",
-		},
+			return { timeout_ms = 500, lsp_format = "fallback" }
+		end,
 	})
 
 	vim.o.formatexpr = "v:lua.require'conform'.formatexpr()"

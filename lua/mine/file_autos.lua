@@ -12,10 +12,16 @@ vim.api.nvim_create_autocmd("FileType", {
 	command = "setlocal tabstop=2 shiftwidth=2 softtabstop=2",
 })
 
--- verilog: 2 spaces, no tabs (lowRISC/Google style, matches verible-verilog-format)
+-- verilog: spaces, width from the project's .verible-format (default 2, verible's default)
 vim.api.nvim_create_autocmd("FileType", {
 	pattern = { "verilog", "systemverilog" },
-	command = "setlocal expandtab tabstop=2 shiftwidth=2 softtabstop=2",
+	callback = function(args)
+		local n = require("mine.verible").settings(args.buf).indent
+		vim.opt_local.expandtab = true
+		vim.opt_local.tabstop = n
+		vim.opt_local.shiftwidth = n
+		vim.opt_local.softtabstop = n
+	end,
 })
 
 -- indentation
